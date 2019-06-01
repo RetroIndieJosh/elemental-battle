@@ -3,7 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 using System.Linq;
+
+public enum Element
+{
+    Air,
+    Earth,
+    Fire,
+    Water,
+    None
+}
 
 static public class ListExt
 {
@@ -43,6 +53,8 @@ public class BattleManager : MonoBehaviour
 
     static public BattleManager instance = null;
 
+    private List<string> m_outputList = new List<string>();
+
     public int SpeedMax { get { return m_speedMax; } }
 
     [SerializeField] private int m_speedMax = 1000;
@@ -59,6 +71,18 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI m_statsDisplay = null;
     [SerializeField] private TextMeshProUGUI m_turnOrderDisplay = null;
 
+    private ButtonControl m_attackButton = null;
+    private ButtonControl m_backButton = null;
+    private ButtonControl m_defendButton = null;
+    private ButtonControl m_spellButton = null;
+    private ButtonControl[] m_castButton = null;
+
+    private KeyControl m_attackKey = null;
+    private KeyControl m_backKey = null;
+    private KeyControl m_defendKey = null;
+    private KeyControl m_spellKey = null;
+    private KeyControl[] m_castKey = null;
+
     private List<Actor> m_enemyList = new List<Actor>();
     private List<Actor> m_playerList = new List<Actor>();
 
@@ -69,6 +93,9 @@ public class BattleManager : MonoBehaviour
 
     private bool m_isRunning = false;
     private int m_currentTurn = 0;
+
+    private int m_airEarthSpectrum = 0;
+    private int m_fireWaterSpectrum = 0;
 
     public void AddEnemy( Actor a_enemy ) {
         Output( $"Add enemy {a_enemy.name}" );
@@ -83,7 +110,7 @@ public class BattleManager : MonoBehaviour
     }
 
     public void AddEnemies( List<Actor> a_enemyList ) {
-        Output( $"Add enemies: {a_enemyList.ToString(", ")} " );
+        Output( $"Add enemies: {a_enemyList.ToString( ", " )} " );
         m_enemyList.AddRange( a_enemyList );
         if ( m_isRunning ) ReviseTurnOrder();
     }
@@ -113,8 +140,9 @@ public class BattleManager : MonoBehaviour
 
         ReviseTurnOrder();
 
-        if ( m_playerList.Contains( m_activeActor ) )
-            Output( "(X) Attack / (C) Defend" );
+        if ( m_playerList.Contains( m_activeActor ) ) {
+            CurPlayerMenuState = PlayerMenuState.TopMenu;
+        }
         m_activeActor.StartTurn();
         m_timeSinceTurnStart = 0f;
     }
@@ -145,6 +173,30 @@ public class BattleManager : MonoBehaviour
         instance = this;
     }
 
+    private void Start() {
+        m_attackButton = Gamepad.current.aButton;
+        m_backButton = Gamepad.current.leftShoulder;
+        m_defendButton = Gamepad.current.bButton;
+        m_spellButton = Gamepad.current.yButton;
+
+        m_castButton = new ButtonControl[4];
+        m_castButton[0] = Gamepad.current.aButton;
+        m_castButton[1] = Gamepad.current.xButton;
+        m_castButton[2] = Gamepad.current.yButton;
+        m_castButton[3] = Gamepad.current.bButton;
+
+        m_attackKey = Keyboard.current.xKey;
+        m_backKey = Keyboard.current.escapeKey;
+        m_defendKey = Keyboard.current.cKey;
+        m_spellKey = Keyboard.current.vKey;
+
+        m_castKey = new KeyControl[4];
+        m_castKey[0] = Keyboard.current.xKey;
+        m_castKey[1] = Keyboard.current.cKey;
+        m_castKey[2] = Keyboard.current.vKey;
+        m_castKey[3] = Keyboard.current.bKey;
+    }
+
     private void Update() {
         if ( m_isRunning == false ) {
             if ( m_enterBattleOnStart == false ) return;
@@ -170,9 +222,7 @@ public class BattleManager : MonoBehaviour
         else UpdateTurnAi();
     }
 
-    private List<string> m_outputList = new List<string>();
-
-    private void Output(string a_output ) {
+    private void Output( string a_output ) {
         var newOutputLines = a_output.Split( '\n' );
         m_outputList.AddRange( newOutputLines );
         while ( m_outputList.Count > m_outputMaxLines )
@@ -187,7 +237,8 @@ public class BattleManager : MonoBehaviour
     private void UpdateHud() {
         if ( m_isRunning == false ) return;
 
-        var statsStr = "";
+        var statsStr = $"Air << {m_airEarthSpectrum} >> Earth\n"
+            + $"Fire << {m_fireWaterSpectrum} >> Water\n\n";
         foreach ( var actor in m_playerList ) {
             statsStr += $"<color=green>{actor.Stats}</color>";
             if ( actor == m_activeActor ) statsStr += " <=";
@@ -201,7 +252,10 @@ public class BattleManager : MonoBehaviour
         m_statsDisplay.text = statsStr;
 
         var startColor = m_playerList.Contains( m_activeActor ) ? "green" : "red";
-        var turnOrderStr = $"[{m_currentTurn}] <color={startColor}>{m_activeActor}</color>\n";
+        var turnOrderStr = "";
+        if ( m_showTurnNumbers )
+            turnOrderStr += $"[{m_currentTurn}] ";
+        turnOrderStr += $"<color={startColor}>{m_activeActor}</color>\n";
         foreach ( var turnData in m_turnOrderList ) {
             var color = m_playerList.Contains( turnData.actor ) ? "green" : "red";
             if ( m_showTurnNumbers ) turnOrderStr += $"[{turnData.turnValue}] ";
@@ -220,17 +274,91 @@ public class BattleManager : MonoBehaviour
         Next();
     }
 
+    private enum PlayerMenuState
+    {
+        TopMenu,
+        SpellMenu
+    }
+
+    private PlayerMenuState m_curPlayerMenuState = PlayerMenuState.TopMenu;
+    private PlayerMenuState CurPlayerMenuState {
+        set {
+            m_curPlayerMenuState = value;
+
+            switch ( m_curPlayerMenuState ) {
+                case PlayerMenuState.SpellMenu: ShowControlsSpellMenu(); break;
+                case PlayerMenuState.TopMenu: ShowControlsTopMenu(); break;
+            }
+        }
+    }
+
+    private void ShowControlsSpellMenu() {
+        var keyboardStr = "(Keyboard) ";
+        var gamepadStr = "(Gamepad) ";
+        for ( var i = 0; i < m_activeActor.Spells.Length; ++i ) {
+            var spell = m_activeActor.Spells[i];
+            var color = m_activeActor.CanCastSpell( i ) ? "green" : "red";
+            var spellStr = $"<color={color}>{spell.name} ({spell.Cost})</color>, ";
+            keyboardStr += $"({m_castKey[i].displayName}) {spellStr}";
+            gamepadStr += $"({m_castButton[i].displayName}) {spellStr}";
+        }
+
+        Output( keyboardStr );
+        Output( gamepadStr );
+    }
+
+    private void ShowControlsTopMenu() {
+        Output( $"[Keyboard] ({m_attackKey.displayName}) Attack / ({m_defendKey.displayName}) Defend" +
+            $"/ ({m_spellKey.displayName}) Spell" );
+        Output( $"[Gamepad] ({m_attackButton.displayName}) Attack / ({m_defendButton.displayName}) Defend" +
+            $"/ ({m_spellButton.displayName}) Spell" );
+    }
+
     private void UpdateTurnPlayer() {
-        if ( Gamepad.current.aButton.wasPressedThisFrame || Keyboard.current.xKey.wasPressedThisFrame ) {
+        switch ( m_curPlayerMenuState ) {
+            case PlayerMenuState.SpellMenu: PlayerSpellMenu(); break;
+            case PlayerMenuState.TopMenu: PlayerTopMenu(); break;
+        }
+    }
+
+    private void PlayerSpellMenu() {
+        if ( m_backButton.wasPressedThisFrame || m_backKey.wasPressedThisFrame ) {
+            CurPlayerMenuState = PlayerMenuState.TopMenu;
+            return;
+        }
+
+        var spells = m_activeActor.Spells;
+        for ( var i = 0; i < spells.Length; ++i ) {
+            if ( m_castButton[i].wasPressedThisFrame || m_castKey[i].wasPressedThisFrame ) {
+                var wasCast = m_activeActor.CastSpell( i );
+                if ( wasCast ) {
+                    Output( $"{m_activeActor.name} casts {spells[i].name} for {spells[i].Cost} CP" );
+                    Next();
+                } else {
+                    Output( $"{m_activeActor.name} cannot cast {spells[i].name} (not enough CP)" );
+                }
+            }
+        }
+    }
+
+    private void PlayerTopMenu() {
+        if ( m_attackButton.wasPressedThisFrame || m_attackKey.wasPressedThisFrame ) {
             var roll = Random.Range( 0, m_enemyList.Count );
             var target = m_enemyList[roll];
             var damage = m_activeActor.Attack( target );
             Output( $"{m_activeActor} attacks {target} for {damage} damage" );
             Next();
-        } else if ( Gamepad.current.bButton.wasPressedThisFrame || Keyboard.current.cKey.wasPressedThisFrame ) {
+        } else if ( m_defendButton.wasPressedThisFrame || m_defendKey.wasPressedThisFrame ) {
             m_activeActor.Defend();
             Output( $"{m_activeActor} is now defending" );
             Next();
+        } else if ( m_spellButton.wasPressedThisFrame || m_spellKey.wasPressedThisFrame ) {
+            if ( m_activeActor.Spells.Length == 0 ) {
+                Output( $"{m_activeActor.name} has no spells" );
+                return;
+            }
+
+            CurPlayerMenuState = PlayerMenuState.SpellMenu;
         }
     }
 
