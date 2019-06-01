@@ -1,0 +1,3 @@
+[submodule "Assets/unity-build-itch"]
+	path = Assets/unity-build-itch
+	url = git@github.com:MrJoshuaMcLean/unity-build-itch.git
