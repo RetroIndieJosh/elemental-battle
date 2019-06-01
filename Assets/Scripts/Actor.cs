@@ -5,40 +5,42 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class Actor : MonoBehaviour
 {
-    public Element InnateElement {  get { return m_innateElement; } }
+    [SerializeField] private ActorDef m_actorDef = null;
+    [SerializeField] private int m_startLevel = 1;
+
+    public Element Element {  get { return m_actorDef.Element; } }
     public bool IsDead {  get { return m_hitPoints <= 0; } }
-    public int Speed { get { return BattleManager.instance.SpeedMax / m_speed; } }
+    public int TurnStep { get { return BattleManager.instance.SpeedMax / Speed; } }
 
     public string Stats {
         get {
-            var stats = $"{name} {m_hitPoints}/{m_hitPointsMax}hp";
+            var stats = $"{name} {m_hitPoints}/{HitPointsMax}hp";
             if ( m_isDefending ) stats += " (defending)";
             return stats;
         }
     }
 
-    public Spell[] Spells {  get { return m_spellList.ToArray(); } }
+    public Spell[] Spells {  get { return SpellList.ToArray(); } }
 
-    [SerializeField] private int m_hitPointsMax = 10;
-    [SerializeField] private int m_attack = 1;
-    [SerializeField] private int m_speed = 10;
-    [SerializeField] private Element m_innateElement = Element.None;
+    private int Strength { get { return m_attributes.Strength; } }
+    private int HitPointsMax { get { return m_attributes.HitPointsMax; } }
+    private int Speed { get { return m_attributes.Speed; } }
+    private List<Spell> SpellList { get { return m_attributes.spellList; } }
 
-    [SerializeField] private List<Spell> m_spellList = new List<Spell>();
-
+    private ActorAttributes m_attributes = null;
     private int m_hitPoints = 0;
     private bool m_isDefending = false;
 
     public int Attack( Actor a_target ) {
-        return a_target.Damage( m_attack );
+        return a_target.Damage( Strength );
     }
 
     public int CastSpell( int a_index, Actor a_target ) {
-        var spell = m_spellList[a_index];
+        var spell = SpellList[a_index];
         var damage = spell.Damage;
-        if ( m_innateElement == a_target.m_innateElement )
+        if ( Element == a_target.Element )
             damage = Mathf.FloorToInt( damage * BattleManager.instance.ResistMultiplier );
-        else if ( BattleManager.instance.OpposingElement[m_innateElement] == a_target.m_innateElement )
+        else if ( BattleManager.instance.OpposingElement[Element] == a_target.Element )
             damage = Mathf.FloorToInt( damage * BattleManager.instance.WeaknessMultiplier );
 
         return a_target.Damage( damage );
@@ -60,6 +62,12 @@ public class Actor : MonoBehaviour
     }
 
     private void Start() {
-        m_hitPoints = m_hitPointsMax;
+        if( m_actorDef == null ) {
+            Debug.LogError( $"[Actor] Failed to create {name}; missing ActorDef. Destroying." );
+            Destroy( this );
+            return;
+        }
+        m_attributes = m_actorDef.GetAttributesForLevel( m_startLevel );
+        m_hitPoints = HitPointsMax;
     }
 }

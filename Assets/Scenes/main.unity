@@ -653,14 +653,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2438d9fe834f7b743a3d4c790b5c9a38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_hitPointsMax: 1000
-  m_attack: 5
-  m_speed: 17
-  m_innateElement: 2
-  m_spellList:
-  - {fileID: 11400000, guid: 32ab4d1c3a4cace48bad0d928ae85aec, type: 2}
-  - {fileID: 11400000, guid: d9b1f2bedce17114fb8024c06f353151, type: 2}
-  - {fileID: 11400000, guid: 9421f20abbb1c9548acfe900b5b562e4, type: 2}
+  m_actorDef: {fileID: 11400000, guid: 645ef6bec6af9344ca1ea08080f4ee18, type: 2}
+  m_startLevel: 5
 --- !u!1 &663009917
 GameObject:
   m_ObjectHideFlags: 0
@@ -1115,14 +1109,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2438d9fe834f7b743a3d4c790b5c9a38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_hitPointsMax: 1000
-  m_attack: 5
-  m_speed: 17
-  m_innateElement: 0
-  m_spellList:
-  - {fileID: 11400000, guid: 32ab4d1c3a4cace48bad0d928ae85aec, type: 2}
-  - {fileID: 11400000, guid: d9b1f2bedce17114fb8024c06f353151, type: 2}
-  - {fileID: 11400000, guid: 9421f20abbb1c9548acfe900b5b562e4, type: 2}
+  m_actorDef: {fileID: 11400000, guid: 645ef6bec6af9344ca1ea08080f4ee18, type: 2}
+  m_startLevel: 5
 --- !u!4 &963041718
 Transform:
   m_ObjectHideFlags: 0
@@ -1166,14 +1154,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2438d9fe834f7b743a3d4c790b5c9a38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_hitPointsMax: 1000
-  m_attack: 5
-  m_speed: 17
-  m_innateElement: 1
-  m_spellList:
-  - {fileID: 11400000, guid: 32ab4d1c3a4cace48bad0d928ae85aec, type: 2}
-  - {fileID: 11400000, guid: d9b1f2bedce17114fb8024c06f353151, type: 2}
-  - {fileID: 11400000, guid: 9421f20abbb1c9548acfe900b5b562e4, type: 2}
+  m_actorDef: {fileID: 11400000, guid: 645ef6bec6af9344ca1ea08080f4ee18, type: 2}
+  m_startLevel: 8
 --- !u!4 &987545726
 Transform:
   m_ObjectHideFlags: 0
@@ -1436,54 +1418,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1134571285}
   m_CullTransparentMesh: 0
---- !u!1 &1280117007
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1280117008}
-  - component: {fileID: 1280117009}
-  m_Layer: 0
-  m_Name: Enemy Water
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1280117008
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1280117007}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.731941, y: -4.160313, z: 85.23716}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 9
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1280117009
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1280117007}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2438d9fe834f7b743a3d4c790b5c9a38, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_hitPointsMax: 1
-  m_attack: 1
-  m_speed: 16
-  m_innateElement: 3
-  m_spellList: []
 --- !u!1 &1419460906
 GameObject:
   m_ObjectHideFlags: 0
@@ -1567,6 +1501,51 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1630355224
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1630355226}
+  - component: {fileID: 1630355225}
+  m_Layer: 0
+  m_Name: Enemy Bat 2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1630355225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1630355224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2438d9fe834f7b743a3d4c790b5c9a38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_actorDef: {fileID: 11400000, guid: 9b13a5059d697014398a11714694335a, type: 2}
+  m_startLevel: 1
+--- !u!4 &1630355226
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1630355224}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 18.731941, y: -4.160313, z: 85.23716}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1798394195
 GameObject:
   m_ObjectHideFlags: 0
@@ -1596,14 +1575,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2438d9fe834f7b743a3d4c790b5c9a38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_hitPointsMax: 1000
-  m_attack: 5
-  m_speed: 17
-  m_innateElement: 3
-  m_spellList:
-  - {fileID: 11400000, guid: 32ab4d1c3a4cace48bad0d928ae85aec, type: 2}
-  - {fileID: 11400000, guid: d9b1f2bedce17114fb8024c06f353151, type: 2}
-  - {fileID: 11400000, guid: 9421f20abbb1c9548acfe900b5b562e4, type: 2}
+  m_actorDef: {fileID: 11400000, guid: 645ef6bec6af9344ca1ea08080f4ee18, type: 2}
+  m_startLevel: 5
 --- !u!4 &1798394197
 Transform:
   m_ObjectHideFlags: 0
@@ -1629,7 +1602,7 @@ GameObject:
   - component: {fileID: 1839404781}
   - component: {fileID: 1839404780}
   m_Layer: 0
-  m_Name: Enemy Normal
+  m_Name: Enemy Bat 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1647,11 +1620,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2438d9fe834f7b743a3d4c790b5c9a38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_hitPointsMax: 1
-  m_attack: 1
-  m_speed: 16
-  m_innateElement: 4
-  m_spellList: []
+  m_actorDef: {fileID: 11400000, guid: 9b13a5059d697014398a11714694335a, type: 2}
+  m_startLevel: 1
 --- !u!4 &1839404781
 Transform:
   m_ObjectHideFlags: 0
@@ -1664,7 +1634,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1891515472
 GameObject:

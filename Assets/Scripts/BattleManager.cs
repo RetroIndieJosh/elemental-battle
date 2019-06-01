@@ -299,7 +299,7 @@ public class BattleManager : MonoBehaviour
                     var target = m_enemyList[roll];
                     var damage = m_activeActor.CastSpell( i, target );
                     Output( $"{m_activeActor.name} casts {spells[i].name} for {spells[i].Cost} CP ~ {damage} damage" );
-                    ApplyElement( m_activeActor.InnateElement, spells[i].ElementPower );
+                    ApplyElement( m_activeActor.Element, spells[i].ElementPower );
 
                     if ( m_enemyList.Contains( m_activeActor ) )
                         m_enemyChargePoints -= SpellCost( i );
@@ -356,7 +356,7 @@ public class BattleManager : MonoBehaviour
         while ( m_turnOrderList.Count < m_turnOrderLookAhead ) {
             var potentialActorList = new List<Actor>();
             foreach ( var actor in fullList )
-                if ( turn % actor.Speed == 0 )
+                if ( turn % actor.TurnStep == 0 )
                     potentialActorList.Add( actor );
             if ( potentialActorList.Count > 0 ) {
                 while ( potentialActorList.Count > 0 ) {
@@ -381,7 +381,7 @@ public class BattleManager : MonoBehaviour
         for ( var i = 0; i < m_activeActor.Spells.Length; ++i ) {
             var spell = m_activeActor.Spells[i];
             var color = CanCastSpell( i ) ? "green" : "red";
-            var spellName = spell.GetNameForElement( m_activeActor.InnateElement );
+            var spellName = spell.GetNameForElement( m_activeActor.Element );
             var cost = SpellCost( i );
             var input = $"{m_castKey[i].displayName} ({m_castButton[i].displayName})";
             controlStr += $"{input} <color={color}>{spellName}: {cost} CP</color>\n";
@@ -403,7 +403,7 @@ public class BattleManager : MonoBehaviour
         var spell = m_activeActor.Spells[a_spellIndex];
         var cost = spell.Cost;
 
-        var element = m_activeActor.InnateElement;
+        var element = m_activeActor.Element;
         var primary = FieldElementPrimary;
         if ( primary != Element.None ) {
             if ( element == primary )

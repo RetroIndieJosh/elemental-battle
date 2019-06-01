@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8c68db1565f15d458eb7624776007c3, type: 3}
+  m_Name: Player (None)
+  m_EditorClassIdentifier: 
+  m_element: 4
+  m_baseAttributes:
+    name: 
+    spellList:
+    - {fileID: 11400000, guid: 32ab4d1c3a4cace48bad0d928ae85aec, type: 2}
+    m_hitPointsMax: 10
+    m_speed: 10
+    m_strength: 1
+  m_strengthIncPerLevel: 1
+  m_hitPointsIncPerLevel: 5
+  m_speedIncPerLevel: 3
+  m_levelCap: 5
+  m_spellList: []
+  m_attributeLevelList:
+  - name: Level 1
+    spellList: []
+    m_hitPointsMax: 15
+    m_speed: 13
+    m_strength: 2
+  - name: Level 2
+    spellList: []
+    m_hitPointsMax: 20
+    m_speed: 16
+    m_strength: 3
+  - name: Level 3
+    spellList: []
+    m_hitPointsMax: 25
+    m_speed: 19
+    m_strength: 4
+  - name: Level 4
+    spellList: []
+    m_hitPointsMax: 30
+    m_speed: 22
+    m_strength: 5
+  - name: Level 5
+    spellList: []
+    m_hitPointsMax: 35
+    m_speed: 25
+    m_strength: 6
