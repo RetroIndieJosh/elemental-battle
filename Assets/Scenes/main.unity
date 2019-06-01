@@ -659,6 +659,8 @@ MonoBehaviour:
   m_innateElement: 2
   m_spellList:
   - {fileID: 11400000, guid: 32ab4d1c3a4cace48bad0d928ae85aec, type: 2}
+  - {fileID: 11400000, guid: d9b1f2bedce17114fb8024c06f353151, type: 2}
+  - {fileID: 11400000, guid: 9421f20abbb1c9548acfe900b5b562e4, type: 2}
 --- !u!1 &663009917
 GameObject:
   m_ObjectHideFlags: 0
@@ -1118,7 +1120,9 @@ MonoBehaviour:
   m_speed: 17
   m_innateElement: 0
   m_spellList:
-  - {fileID: 11400000, guid: 5a80beb75d30bf64d9848846dc26235a, type: 2}
+  - {fileID: 11400000, guid: 32ab4d1c3a4cace48bad0d928ae85aec, type: 2}
+  - {fileID: 11400000, guid: d9b1f2bedce17114fb8024c06f353151, type: 2}
+  - {fileID: 11400000, guid: 9421f20abbb1c9548acfe900b5b562e4, type: 2}
 --- !u!4 &963041718
 Transform:
   m_ObjectHideFlags: 0
@@ -1167,7 +1171,9 @@ MonoBehaviour:
   m_speed: 17
   m_innateElement: 1
   m_spellList:
-  - {fileID: 11400000, guid: e5f8323c9f9b1c74597d3b1ef7d66770, type: 2}
+  - {fileID: 11400000, guid: 32ab4d1c3a4cace48bad0d928ae85aec, type: 2}
+  - {fileID: 11400000, guid: d9b1f2bedce17114fb8024c06f353151, type: 2}
+  - {fileID: 11400000, guid: 9421f20abbb1c9548acfe900b5b562e4, type: 2}
 --- !u!4 &987545726
 Transform:
   m_ObjectHideFlags: 0
@@ -1596,6 +1602,8 @@ MonoBehaviour:
   m_innateElement: 3
   m_spellList:
   - {fileID: 11400000, guid: 32ab4d1c3a4cace48bad0d928ae85aec, type: 2}
+  - {fileID: 11400000, guid: d9b1f2bedce17114fb8024c06f353151, type: 2}
+  - {fileID: 11400000, guid: 9421f20abbb1c9548acfe900b5b562e4, type: 2}
 --- !u!4 &1798394197
 Transform:
   m_ObjectHideFlags: 0

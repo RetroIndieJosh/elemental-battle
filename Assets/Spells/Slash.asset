@@ -10,8 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2a797d1526d7b2648b16b32dcb180300, type: 3}
-  m_Name: Hydro
+  m_Name: Slash
   m_EditorClassIdentifier: 
   m_cost: 3
-  m_element: 3
-  m_damage: 4
+  m_elementPower: 1
+  m_damage: 6
+  m_nameAir: 
+  m_nameEarth: 
+  m_nameFire: 
+  m_nameWater: 

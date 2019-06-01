@@ -377,29 +377,26 @@ public class BattleManager : MonoBehaviour
     }
 
     private void ShowControlsSpellMenu() {
-        var keyboardStr = "(Keyboard) ";
-        var gamepadStr = "(Gamepad) ";
+        var controlStr = "";
         for ( var i = 0; i < m_activeActor.Spells.Length; ++i ) {
             var spell = m_activeActor.Spells[i];
             var color = CanCastSpell( i ) ? "green" : "red";
-            var spellStr = $"<color={color}>{spell.name} ({SpellCost( i )})</color>, ";
-            keyboardStr += $"({m_castKey[i].displayName}) {spellStr}";
-            gamepadStr += $"({m_castButton[i].displayName}) {spellStr}";
+            var spellName = spell.GetNameForElement( m_activeActor.InnateElement );
+            var cost = SpellCost( i );
+            var input = $"{m_castKey[i].displayName} ({m_castButton[i].displayName})";
+            controlStr += $"{input} <color={color}>{spellName}: {cost} CP</color>\n";
         }
 
-        keyboardStr += $"[{m_backKey.displayName}] Back";
-        gamepadStr += $"[{m_backButton.displayName}] Back";
-
-        m_menuDisplay.text = $"{keyboardStr}\n\n{gamepadStr}";
+        m_menuDisplay.text = $"{m_activeActor.name} Spells\n\n" + controlStr
+            + $"\n{m_backKey.displayName} ({m_backButton.displayName}) Back";
     }
 
     private void ShowControlsTopMenu() {
-        var keyboardStr = $"[Keyboard] ({m_attackKey.displayName}) Attack / ({m_defendKey.displayName}) Defend" +
-            $"/ ({m_spellKey.displayName}) Spell";
-        var gamepadStr = $"[Gamepad] ({m_attackButton.displayName}) Attack / ({m_defendButton.displayName}) Defend" +
-            $"/ ({m_spellButton.displayName}) Spell";
+        var attackInputStr = $"{m_attackKey.displayName} ({m_attackButton.displayName}) Attack";
+        var defendInputStr = $"{m_defendKey.displayName} ({m_defendButton.displayName}) Defend";
+        var spellInputStr = $"{m_spellKey.displayName} ({m_spellButton.displayName}) Spells";
 
-        m_menuDisplay.text = $"{keyboardStr}\n\n{gamepadStr}";
+        m_menuDisplay.text = $"{m_activeActor.name}\n\n{attackInputStr}\n{defendInputStr}\n{spellInputStr}";
     }
 
     private int SpellCost( int a_spellIndex ) {
@@ -517,7 +514,7 @@ public class BattleManager : MonoBehaviour
 
         var statsStr = $"<color={airEarthColor}>Air << {m_airEarthSpectrum} >> Earth</color>\n" +
             $"<color={fireWaterColor}>Fire << {m_fireWaterSpectrum} >> Water</color>\n\n" +
-            $"Charge Points: {m_playerChargePoints}/{m_chargePointsMax}\n\n";
+            $"{m_playerChargePoints}/{m_chargePointsMax} CP\n\n";
         foreach ( var actor in m_playerList ) {
             statsStr += $"<color=green>{actor.Stats}</color>";
             if ( actor == m_activeActor ) statsStr += " <=";
