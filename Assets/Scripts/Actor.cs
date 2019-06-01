@@ -67,7 +67,7 @@ public class Actor : MonoBehaviour
             Destroy( this );
             return;
         }
-        m_attributes = m_actorDef.GetAttributesForLevel( m_startLevel );
+        m_attributes = new ActorAttributes( m_actorDef.GetAttributesForLevel( m_startLevel ) );
         m_hitPoints = HitPointsMax;
     }
 }

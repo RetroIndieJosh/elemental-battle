@@ -12,23 +12,520 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8c68db1565f15d458eb7624776007c3, type: 3}
   m_Name: Bat
   m_EditorClassIdentifier: 
+  m_element: 4
   m_baseAttributes:
-    element: 4
+    name: 
     spellList:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
-  m_strengthIncPerLevel: 1
-  m_hitPointsIncPerLevel: 1
-  m_speedIncPerLevel: 1
+    m_hitPointsMax: 10
+    m_speed: 10
+    m_strength: 1
+  m_strengthIncPerLevel: 0.5
+  m_hitPointsIncPerLevel: 10
+  m_speedIncPerLevel: 3
   m_levelCap: 100
-  m_spellList:
-  - spell: {fileID: 11400000, guid: 32ab4d1c3a4cace48bad0d928ae85aec, type: 2}
-    level: 0
-  - spell: {fileID: 0}
-    level: 0
-  - spell: {fileID: 0}
-    level: 0
-  - spell: {fileID: 0}
-    level: 0
+  m_spellList: []
+  m_attributeLevelList:
+  - name: Level 1
+    spellList: []
+    m_hitPointsMax: 20
+    m_speed: 13
+    m_strength: 1.5
+  - name: Level 2
+    spellList: []
+    m_hitPointsMax: 30
+    m_speed: 16
+    m_strength: 2
+  - name: Level 3
+    spellList: []
+    m_hitPointsMax: 40
+    m_speed: 19
+    m_strength: 2.5
+  - name: Level 4
+    spellList: []
+    m_hitPointsMax: 50
+    m_speed: 22
+    m_strength: 3
+  - name: Level 5
+    spellList: []
+    m_hitPointsMax: 60
+    m_speed: 25
+    m_strength: 3.5
+  - name: Level 6
+    spellList: []
+    m_hitPointsMax: 70
+    m_speed: 28
+    m_strength: 4
+  - name: Level 7
+    spellList: []
+    m_hitPointsMax: 80
+    m_speed: 31
+    m_strength: 4.5
+  - name: Level 8
+    spellList: []
+    m_hitPointsMax: 90
+    m_speed: 34
+    m_strength: 5
+  - name: Level 9
+    spellList: []
+    m_hitPointsMax: 100
+    m_speed: 37
+    m_strength: 5.5
+  - name: Level 10
+    spellList: []
+    m_hitPointsMax: 110
+    m_speed: 40
+    m_strength: 6
+  - name: Level 11
+    spellList: []
+    m_hitPointsMax: 120
+    m_speed: 43
+    m_strength: 6.5
+  - name: Level 12
+    spellList: []
+    m_hitPointsMax: 130
+    m_speed: 46
+    m_strength: 7
+  - name: Level 13
+    spellList: []
+    m_hitPointsMax: 140
+    m_speed: 49
+    m_strength: 7.5
+  - name: Level 14
+    spellList: []
+    m_hitPointsMax: 150
+    m_speed: 52
+    m_strength: 8
+  - name: Level 15
+    spellList: []
+    m_hitPointsMax: 160
+    m_speed: 55
+    m_strength: 8.5
+  - name: Level 16
+    spellList: []
+    m_hitPointsMax: 170
+    m_speed: 58
+    m_strength: 9
+  - name: Level 17
+    spellList: []
+    m_hitPointsMax: 180
+    m_speed: 61
+    m_strength: 9.5
+  - name: Level 18
+    spellList: []
+    m_hitPointsMax: 190
+    m_speed: 64
+    m_strength: 10
+  - name: Level 19
+    spellList: []
+    m_hitPointsMax: 200
+    m_speed: 67
+    m_strength: 10.5
+  - name: Level 20
+    spellList: []
+    m_hitPointsMax: 210
+    m_speed: 70
+    m_strength: 11
+  - name: Level 21
+    spellList: []
+    m_hitPointsMax: 220
+    m_speed: 73
+    m_strength: 11.5
+  - name: Level 22
+    spellList: []
+    m_hitPointsMax: 230
+    m_speed: 76
+    m_strength: 12
+  - name: Level 23
+    spellList: []
+    m_hitPointsMax: 240
+    m_speed: 79
+    m_strength: 12.5
+  - name: Level 24
+    spellList: []
+    m_hitPointsMax: 250
+    m_speed: 82
+    m_strength: 13
+  - name: Level 25
+    spellList: []
+    m_hitPointsMax: 260
+    m_speed: 85
+    m_strength: 13.5
+  - name: Level 26
+    spellList: []
+    m_hitPointsMax: 270
+    m_speed: 88
+    m_strength: 14
+  - name: Level 27
+    spellList: []
+    m_hitPointsMax: 280
+    m_speed: 91
+    m_strength: 14.5
+  - name: Level 28
+    spellList: []
+    m_hitPointsMax: 290
+    m_speed: 94
+    m_strength: 15
+  - name: Level 29
+    spellList: []
+    m_hitPointsMax: 300
+    m_speed: 97
+    m_strength: 15.5
+  - name: Level 30
+    spellList: []
+    m_hitPointsMax: 310
+    m_speed: 100
+    m_strength: 16
+  - name: Level 31
+    spellList: []
+    m_hitPointsMax: 320
+    m_speed: 103
+    m_strength: 16.5
+  - name: Level 32
+    spellList: []
+    m_hitPointsMax: 330
+    m_speed: 106
+    m_strength: 17
+  - name: Level 33
+    spellList: []
+    m_hitPointsMax: 340
+    m_speed: 109
+    m_strength: 17.5
+  - name: Level 34
+    spellList: []
+    m_hitPointsMax: 350
+    m_speed: 112
+    m_strength: 18
+  - name: Level 35
+    spellList: []
+    m_hitPointsMax: 360
+    m_speed: 115
+    m_strength: 18.5
+  - name: Level 36
+    spellList: []
+    m_hitPointsMax: 370
+    m_speed: 118
+    m_strength: 19
+  - name: Level 37
+    spellList: []
+    m_hitPointsMax: 380
+    m_speed: 121
+    m_strength: 19.5
+  - name: Level 38
+    spellList: []
+    m_hitPointsMax: 390
+    m_speed: 124
+    m_strength: 20
+  - name: Level 39
+    spellList: []
+    m_hitPointsMax: 400
+    m_speed: 127
+    m_strength: 20.5
+  - name: Level 40
+    spellList: []
+    m_hitPointsMax: 410
+    m_speed: 130
+    m_strength: 21
+  - name: Level 41
+    spellList: []
+    m_hitPointsMax: 420
+    m_speed: 133
+    m_strength: 21.5
+  - name: Level 42
+    spellList: []
+    m_hitPointsMax: 430
+    m_speed: 136
+    m_strength: 22
+  - name: Level 43
+    spellList: []
+    m_hitPointsMax: 440
+    m_speed: 139
+    m_strength: 22.5
+  - name: Level 44
+    spellList: []
+    m_hitPointsMax: 450
+    m_speed: 142
+    m_strength: 23
+  - name: Level 45
+    spellList: []
+    m_hitPointsMax: 460
+    m_speed: 145
+    m_strength: 23.5
+  - name: Level 46
+    spellList: []
+    m_hitPointsMax: 470
+    m_speed: 148
+    m_strength: 24
+  - name: Level 47
+    spellList: []
+    m_hitPointsMax: 480
+    m_speed: 151
+    m_strength: 24.5
+  - name: Level 48
+    spellList: []
+    m_hitPointsMax: 490
+    m_speed: 154
+    m_strength: 25
+  - name: Level 49
+    spellList: []
+    m_hitPointsMax: 500
+    m_speed: 157
+    m_strength: 25.5
+  - name: Level 50
+    spellList: []
+    m_hitPointsMax: 510
+    m_speed: 160
+    m_strength: 26
+  - name: Level 51
+    spellList: []
+    m_hitPointsMax: 520
+    m_speed: 163
+    m_strength: 26.5
+  - name: Level 52
+    spellList: []
+    m_hitPointsMax: 530
+    m_speed: 166
+    m_strength: 27
+  - name: Level 53
+    spellList: []
+    m_hitPointsMax: 540
+    m_speed: 169
+    m_strength: 27.5
+  - name: Level 54
+    spellList: []
+    m_hitPointsMax: 550
+    m_speed: 172
+    m_strength: 28
+  - name: Level 55
+    spellList: []
+    m_hitPointsMax: 560
+    m_speed: 175
+    m_strength: 28.5
+  - name: Level 56
+    spellList: []
+    m_hitPointsMax: 570
+    m_speed: 178
+    m_strength: 29
+  - name: Level 57
+    spellList: []
+    m_hitPointsMax: 580
+    m_speed: 181
+    m_strength: 29.5
+  - name: Level 58
+    spellList: []
+    m_hitPointsMax: 590
+    m_speed: 184
+    m_strength: 30
+  - name: Level 59
+    spellList: []
+    m_hitPointsMax: 600
+    m_speed: 187
+    m_strength: 30.5
+  - name: Level 60
+    spellList: []
+    m_hitPointsMax: 610
+    m_speed: 190
+    m_strength: 31
+  - name: Level 61
+    spellList: []
+    m_hitPointsMax: 620
+    m_speed: 193
+    m_strength: 31.5
+  - name: Level 62
+    spellList: []
+    m_hitPointsMax: 630
+    m_speed: 196
+    m_strength: 32
+  - name: Level 63
+    spellList: []
+    m_hitPointsMax: 640
+    m_speed: 199
+    m_strength: 32.5
+  - name: Level 64
+    spellList: []
+    m_hitPointsMax: 650
+    m_speed: 202
+    m_strength: 33
+  - name: Level 65
+    spellList: []
+    m_hitPointsMax: 660
+    m_speed: 205
+    m_strength: 33.5
+  - name: Level 66
+    spellList: []
+    m_hitPointsMax: 670
+    m_speed: 208
+    m_strength: 34
+  - name: Level 67
+    spellList: []
+    m_hitPointsMax: 680
+    m_speed: 211
+    m_strength: 34.5
+  - name: Level 68
+    spellList: []
+    m_hitPointsMax: 690
+    m_speed: 214
+    m_strength: 35
+  - name: Level 69
+    spellList: []
+    m_hitPointsMax: 700
+    m_speed: 217
+    m_strength: 35.5
+  - name: Level 70
+    spellList: []
+    m_hitPointsMax: 710
+    m_speed: 220
+    m_strength: 36
+  - name: Level 71
+    spellList: []
+    m_hitPointsMax: 720
+    m_speed: 223
+    m_strength: 36.5
+  - name: Level 72
+    spellList: []
+    m_hitPointsMax: 730
+    m_speed: 226
+    m_strength: 37
+  - name: Level 73
+    spellList: []
+    m_hitPointsMax: 740
+    m_speed: 229
+    m_strength: 37.5
+  - name: Level 74
+    spellList: []
+    m_hitPointsMax: 750
+    m_speed: 232
+    m_strength: 38
+  - name: Level 75
+    spellList: []
+    m_hitPointsMax: 760
+    m_speed: 235
+    m_strength: 38.5
+  - name: Level 76
+    spellList: []
+    m_hitPointsMax: 770
+    m_speed: 238
+    m_strength: 39
+  - name: Level 77
+    spellList: []
+    m_hitPointsMax: 780
+    m_speed: 241
+    m_strength: 39.5
+  - name: Level 78
+    spellList: []
+    m_hitPointsMax: 790
+    m_speed: 244
+    m_strength: 40
+  - name: Level 79
+    spellList: []
+    m_hitPointsMax: 800
+    m_speed: 247
+    m_strength: 40.5
+  - name: Level 80
+    spellList: []
+    m_hitPointsMax: 810
+    m_speed: 250
+    m_strength: 41
+  - name: Level 81
+    spellList: []
+    m_hitPointsMax: 820
+    m_speed: 253
+    m_strength: 41.5
+  - name: Level 82
+    spellList: []
+    m_hitPointsMax: 830
+    m_speed: 256
+    m_strength: 42
+  - name: Level 83
+    spellList: []
+    m_hitPointsMax: 840
+    m_speed: 259
+    m_strength: 42.5
+  - name: Level 84
+    spellList: []
+    m_hitPointsMax: 850
+    m_speed: 262
+    m_strength: 43
+  - name: Level 85
+    spellList: []
+    m_hitPointsMax: 860
+    m_speed: 265
+    m_strength: 43.5
+  - name: Level 86
+    spellList: []
+    m_hitPointsMax: 870
+    m_speed: 268
+    m_strength: 44
+  - name: Level 87
+    spellList: []
+    m_hitPointsMax: 880
+    m_speed: 271
+    m_strength: 44.5
+  - name: Level 88
+    spellList: []
+    m_hitPointsMax: 890
+    m_speed: 274
+    m_strength: 45
+  - name: Level 89
+    spellList: []
+    m_hitPointsMax: 900
+    m_speed: 277
+    m_strength: 45.5
+  - name: Level 90
+    spellList: []
+    m_hitPointsMax: 910
+    m_speed: 280
+    m_strength: 46
+  - name: Level 91
+    spellList: []
+    m_hitPointsMax: 920
+    m_speed: 283
+    m_strength: 46.5
+  - name: Level 92
+    spellList: []
+    m_hitPointsMax: 930
+    m_speed: 286
+    m_strength: 47
+  - name: Level 93
+    spellList: []
+    m_hitPointsMax: 940
+    m_speed: 289
+    m_strength: 47.5
+  - name: Level 94
+    spellList: []
+    m_hitPointsMax: 950
+    m_speed: 292
+    m_strength: 48
+  - name: Level 95
+    spellList: []
+    m_hitPointsMax: 960
+    m_speed: 295
+    m_strength: 48.5
+  - name: Level 96
+    spellList: []
+    m_hitPointsMax: 970
+    m_speed: 298
+    m_strength: 49
+  - name: Level 97
+    spellList: []
+    m_hitPointsMax: 980
+    m_speed: 301
+    m_strength: 49.5
+  - name: Level 98
+    spellList: []
+    m_hitPointsMax: 990
+    m_speed: 304
+    m_strength: 50
+  - name: Level 99
+    spellList: []
+    m_hitPointsMax: 1000
+    m_speed: 307
+    m_strength: 50.5
+  - name: Level 100
+    spellList: []
+    m_hitPointsMax: 1010
+    m_speed: 310
+    m_strength: 51

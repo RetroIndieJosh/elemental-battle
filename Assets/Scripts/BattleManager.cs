@@ -200,15 +200,12 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
-        // TODO find fastest actor and set as active actor
-        m_activeActor = m_playerList[0];
-
-        Output( $"Start {m_playerList.Count} vs {m_enemyList.Count}, {m_activeActor} first" );
-
         m_isRunning = true;
 
         ReviseTurnOrder();
         Next();
+
+        Output( $"Start {m_playerList.Count} vs {m_enemyList.Count}, {m_activeActor} first" );
     }
 
     private void ApplyElement( Element a_element, int a_power = 1 ) {
@@ -420,7 +417,7 @@ public class BattleManager : MonoBehaviour
                 cost = Mathf.FloorToInt( cost * 1.5f );
         }
 
-        return cost;
+        return Mathf.Max( 1, cost );
     }
 
     private void Start() {

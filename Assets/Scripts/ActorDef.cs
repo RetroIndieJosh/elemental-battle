@@ -39,6 +39,9 @@ public class ActorAttributes
         m_hitPointsMax = a_other.m_hitPointsMax;
         m_speed = a_other.m_speed;
         m_strength = a_other.m_strength;
+
+        foreach ( var spell in a_other.spellList )
+            spellList.Add( spell );
     }
 
     public void AddHitPoints(float a_hitPoints ) {
