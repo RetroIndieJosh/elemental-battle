@@ -96,6 +96,23 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private int m_turnOrderLookAhead = 5;
     [SerializeField] private float m_aiTurnlengthSec = 0.5f;
 
+    [Header("Charge Points")]
+    [SerializeField] private int m_chargePointsPerAttack = 1;
+    [SerializeField] private int m_chargePointsMax = 10;
+
+    [Header( "Field Effect" )]
+    [SerializeField] private float m_primaryFieldEffectMatchMult = 2f;
+    [SerializeField] private float m_secondaryFieldEffectMatchMult = 2f;
+    [SerializeField] private float m_primaryFieldEffectOpposeMult = 2f;
+    [SerializeField] private float m_secondaryFieldEffectOpposeMult = 2f;
+
+    [SerializeField, Tooltip("The point at which element field effects (+/-) take effect")]
+    private int m_fieldEffectThreshold = 2;
+
+    [SerializeField, Tooltip( "The maximum field effect (+/-) per element" )]
+    private int m_fieldEffectMax = 3;
+
+
     [Header( "Weakness/Resistance" )]
     [SerializeField] private float m_resistMultiplier = 0.75f;
     [SerializeField] private float m_weaknessMultiplier = 1.5f;
@@ -133,6 +150,9 @@ public class BattleManager : MonoBehaviour
 
     private bool m_isRunning = false;
     private int m_currentTurn = 0;
+
+    private int m_enemyChargePoints = 0;
+    private int m_playerChargePoints = 0;
 
     private int m_airEarthSpectrum = 0;
     private int m_fireWaterSpectrum = 0;
@@ -253,6 +273,9 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
+        m_enemyChargePoints = Mathf.Clamp( m_enemyChargePoints, 0, m_chargePointsMax );
+        m_playerChargePoints = Mathf.Clamp( m_playerChargePoints, 0, m_chargePointsMax );
+
         UpdateHud();
 
         m_timeSinceTurnStart += Time.deltaTime;
@@ -274,25 +297,60 @@ public class BattleManager : MonoBehaviour
         m_outputDisplay.text = output;
     }
 
+    public Element FieldElementPrimary { get { return FieldElements[0]; } }
+    public Element FieldElementSecondary { get { return FieldElements[1]; } }
+
+    private Element[] FieldElements {
+        get {
+            var fieldElements = new Element[2];
+            fieldElements[0] = fieldElements[1] = Element.None;
+
+            if ( Mathf.Abs( m_airEarthSpectrum ) > Mathf.Abs( m_fireWaterSpectrum ) ) {
+                if ( m_airEarthSpectrum <= -m_fieldEffectThreshold )
+                    fieldElements[0] = Element.Air;
+                else if ( m_airEarthSpectrum >= m_fieldEffectThreshold )
+                    fieldElements[0] = Element.Earth;
+            } else {
+                if ( m_fireWaterSpectrum <= -m_fieldEffectThreshold )
+                    fieldElements[0] = Element.Fire;
+                else if ( m_fireWaterSpectrum >= m_fieldEffectThreshold )
+                    fieldElements[0] = Element.Water;
+            }
+
+            if ( fieldElements[0] == Element.Fire || fieldElements[0] == Element.Water ) {
+                if ( m_airEarthSpectrum <= -m_fieldEffectThreshold )
+                    fieldElements[1] = Element.Air;
+                else if ( m_airEarthSpectrum >= m_fieldEffectThreshold )
+                    fieldElements[1] = Element.Earth;
+            } else {
+                if ( m_fireWaterSpectrum <= -m_fieldEffectThreshold )
+                    fieldElements[1] = Element.Fire;
+                else if ( m_fireWaterSpectrum >= m_fieldEffectThreshold )
+                    fieldElements[1] = Element.Water;
+            }
+
+            return fieldElements;
+        }
+    }
+
     private void UpdateHud() {
         if ( m_isRunning == false ) return;
 
-        var colorChangeThreshold = 1;
-
         var airEarthColor = "white";
-        if ( m_airEarthSpectrum <= -colorChangeThreshold )
+        if ( m_airEarthSpectrum <= -m_fieldEffectThreshold )
             airEarthColor = ElementColor( Element.Air ).ToHexString();
-        else if( m_airEarthSpectrum >= colorChangeThreshold )
+        else if( m_airEarthSpectrum >= m_fieldEffectThreshold )
             airEarthColor = ElementColor( Element.Earth ).ToHexString();
 
         var fireWaterColor = "white";
-        if ( m_fireWaterSpectrum <= -colorChangeThreshold )
+        if ( m_fireWaterSpectrum <= -m_fieldEffectThreshold )
             fireWaterColor = ElementColor( Element.Fire ).ToHexString();
-        else if( m_fireWaterSpectrum >= colorChangeThreshold )
+        else if( m_fireWaterSpectrum >= m_fieldEffectThreshold )
             fireWaterColor = ElementColor( Element.Water ).ToHexString();
 
-        var statsStr = $"<color={airEarthColor}>Air << {m_airEarthSpectrum} >> Earth</color>\n"
-            + $"<color={fireWaterColor}>Fire << {m_fireWaterSpectrum} >> Water\n\n</color>";
+        var statsStr = $"<color={airEarthColor}>Air << {m_airEarthSpectrum} >> Earth</color>\n" + 
+            $"<color={fireWaterColor}>Fire << {m_fireWaterSpectrum} >> Water</color>\n\n" +
+            $"Charge Points: {m_playerChargePoints}/{m_chargePointsMax}\n\n";
         foreach ( var actor in m_playerList ) {
             statsStr += $"<color=green>{actor.Stats}</color>";
             if ( actor == m_activeActor ) statsStr += " <=";
@@ -324,8 +382,41 @@ public class BattleManager : MonoBehaviour
         var roll = Random.Range( 0, m_playerList.Count );
         var target = m_playerList[roll];
         var damage = m_activeActor.Attack( target );
-        Output( $"{m_activeActor} attacks {target} for {damage} damage" );
+        if ( damage > 0 ) {
+            Output( $"{m_activeActor} attacks {target} for {damage} damage" );
+            m_enemyChargePoints += m_chargePointsPerAttack;
+        }
         Next();
+    }
+
+    private int SpellCost( int a_spellIndex ) {
+        var spell = m_activeActor.Spells[a_spellIndex];
+        var cost = spell.Cost;
+
+        var element = m_activeActor.InnateElement;
+        var primary = FieldElementPrimary;
+        if ( primary != Element.None ) {
+            if ( element == primary )
+                cost = Mathf.FloorToInt( cost * 0.5f );
+            else if ( element == OpposingElement[primary] )
+                cost = cost * 2;
+        }
+
+        var secondary = FieldElementSecondary;
+        if ( secondary != Element.None ) {
+            if ( element == secondary )
+                cost = Mathf.FloorToInt( cost * 0.75f );
+            else if ( element == OpposingElement[secondary] )
+                cost = Mathf.FloorToInt( cost * 1.5f );
+        }
+
+        return cost;
+    }
+
+    private bool CanCastSpell( int a_spellIndex ) {
+        if( m_enemyList.Contains(m_activeActor))
+            return SpellCost( a_spellIndex ) <= m_enemyChargePoints;
+        else return SpellCost( a_spellIndex ) <= m_playerChargePoints;
     }
 
     private void ShowControlsSpellMenu() {
@@ -333,8 +424,8 @@ public class BattleManager : MonoBehaviour
         var gamepadStr = "(Gamepad) ";
         for ( var i = 0; i < m_activeActor.Spells.Length; ++i ) {
             var spell = m_activeActor.Spells[i];
-            var color = m_activeActor.CanCastSpell( i ) ? "green" : "red";
-            var spellStr = $"<color={color}>{spell.name} ({spell.Cost})</color>, ";
+            var color = CanCastSpell( i ) ? "green" : "red";
+            var spellStr = $"<color={color}>{spell.name} ({SpellCost(i)})</color>, ";
             keyboardStr += $"({m_castKey[i].displayName}) {spellStr}";
             gamepadStr += $"({m_castButton[i].displayName}) {spellStr}";
         }
@@ -363,11 +454,26 @@ public class BattleManager : MonoBehaviour
 
     private void ApplyElement( Element a_element, int a_power = 1 ) {
         switch(a_element) {
-            case Element.Air: m_airEarthSpectrum -= a_power; break;
-            case Element.Earth: m_airEarthSpectrum += a_power; break;
-            case Element.Fire: m_fireWaterSpectrum -= a_power; break;
-            case Element.Water: m_fireWaterSpectrum += a_power; break;
+            case Element.Air:
+                if ( m_airEarthSpectrum > 0 ) m_airEarthSpectrum = 0;
+                else m_airEarthSpectrum -= a_power;
+                break;
+            case Element.Earth:
+                if ( m_airEarthSpectrum < 0 ) m_airEarthSpectrum = 0;
+                else m_airEarthSpectrum += a_power;
+                break;
+            case Element.Fire:
+                if ( m_fireWaterSpectrum > 0 ) m_fireWaterSpectrum = 0;
+                else m_fireWaterSpectrum -= a_power;
+                break;
+            case Element.Water:
+                if ( m_fireWaterSpectrum < 0 ) m_fireWaterSpectrum = 0;
+                else m_fireWaterSpectrum += a_power;
+                break;
         }
+
+        m_airEarthSpectrum = Mathf.Clamp( m_airEarthSpectrum, -m_fieldEffectMax, m_fieldEffectMax );
+        m_fireWaterSpectrum = Mathf.Clamp( m_fireWaterSpectrum, -m_fieldEffectMax, m_fieldEffectMax );
     }
 
     private Color ElementColor( Element a_element ) {
@@ -389,12 +495,16 @@ public class BattleManager : MonoBehaviour
         var spells = m_activeActor.Spells;
         for ( var i = 0; i < spells.Length; ++i ) {
             if ( m_castButton[i].wasPressedThisFrame || m_castKey[i].wasPressedThisFrame ) {
-                var roll = Random.Range( 0, m_enemyList.Count );
-                var target = m_enemyList[roll];
-                var damage = m_activeActor.CastSpell( i, target );
-                if ( damage > 0 ) {
+                if ( CanCastSpell( i ) ) {
+                    var roll = Random.Range( 0, m_enemyList.Count );
+                    var target = m_enemyList[roll];
+                    var damage = m_activeActor.CastSpell( i, target );
                     Output( $"{m_activeActor.name} casts {spells[i].name} for {spells[i].Cost} CP ~ {damage} damage" );
-                    ApplyElement( spells[i].Element );
+                    ApplyElement( m_activeActor.InnateElement, spells[i].ElementPower );
+
+                    if( m_enemyList.Contains(m_activeActor))
+                        m_enemyChargePoints -= SpellCost( i );
+                    else m_playerChargePoints -= SpellCost( i );
                     Next();
                 } else {
                     Output( $"{m_activeActor.name} cannot cast {spells[i].name} (not enough CP)" );
@@ -410,7 +520,10 @@ public class BattleManager : MonoBehaviour
             var roll = Random.Range( 0, m_enemyList.Count );
             var target = m_enemyList[roll];
             var damage = m_activeActor.Attack( target );
-            Output( $"{m_activeActor} attacks {target} for {damage} damage" );
+            if ( damage >= 0 ) {
+                m_playerChargePoints += m_chargePointsPerAttack;
+                Output( $"{m_activeActor} attacks {target} for {damage} damage" );
+            }
             Next();
         } else if ( m_defendButton.wasPressedThisFrame || m_defendKey.wasPressedThisFrame ) {
             m_activeActor.Defend();
