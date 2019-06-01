@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_cost: 3
   m_element: 3
+  m_damage: 4

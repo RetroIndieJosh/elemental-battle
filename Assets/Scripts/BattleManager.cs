@@ -35,6 +35,13 @@ static public class ListExt
 
         return strList.ToString();
     }
+
+    public static string ToHexString( this Color c ) {
+        var r = Mathf.FloorToInt( c.r * 255 );
+        var g = Mathf.FloorToInt( c.g * 255 );
+        var b = Mathf.FloorToInt( c.b * 255 );
+        return $"#{r:X2}{g:X2}{b:X2}";
+    }
 }
 
 [DisallowMultipleComponent]
@@ -53,6 +60,34 @@ public class BattleManager : MonoBehaviour
 
     static public BattleManager instance = null;
 
+    private enum PlayerMenuState
+    {
+        TopMenu,
+        SpellMenu
+    }
+
+    private PlayerMenuState m_curPlayerMenuState = PlayerMenuState.TopMenu;
+    private PlayerMenuState CurPlayerMenuState {
+        set {
+            m_curPlayerMenuState = value;
+
+            switch ( m_curPlayerMenuState ) {
+                case PlayerMenuState.SpellMenu: ShowControlsSpellMenu(); break;
+                case PlayerMenuState.TopMenu: ShowControlsTopMenu(); break;
+            }
+        }
+    }
+
+    public Dictionary<Element, Element> OpposingElement = new Dictionary<Element, Element>() {
+        {Element.Air, Element.Earth },
+        {Element.Earth, Element.Air },
+        {Element.Fire, Element.Water },
+        {Element.Water, Element.Fire }
+    };
+
+    public float ResistMultiplier {  get { return m_resistMultiplier; } }
+    public float WeaknessMultiplier {  get { return m_weaknessMultiplier; } }
+
     private List<string> m_outputList = new List<string>();
 
     public int SpeedMax { get { return m_speedMax; } }
@@ -61,11 +96,16 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private int m_turnOrderLookAhead = 5;
     [SerializeField] private float m_aiTurnlengthSec = 0.5f;
 
+    [Header( "Weakness/Resistance" )]
+    [SerializeField] private float m_resistMultiplier = 0.75f;
+    [SerializeField] private float m_weaknessMultiplier = 1.5f;
+
     [Header( "Debug" )]
     [SerializeField] private bool m_enterBattleOnStart = false;
     [SerializeField] private bool m_showTurnNumbers = false;
 
     [Header( "UI" )]
+    [SerializeField] private TextMeshProUGUI m_menuDisplay = null;
     [SerializeField] private TextMeshProUGUI m_outputDisplay = null;
     [SerializeField] private int m_outputMaxLines = 10;
     [SerializeField] private TextMeshProUGUI m_statsDisplay = null;
@@ -237,8 +277,22 @@ public class BattleManager : MonoBehaviour
     private void UpdateHud() {
         if ( m_isRunning == false ) return;
 
-        var statsStr = $"Air << {m_airEarthSpectrum} >> Earth\n"
-            + $"Fire << {m_fireWaterSpectrum} >> Water\n\n";
+        var colorChangeThreshold = 1;
+
+        var airEarthColor = "white";
+        if ( m_airEarthSpectrum <= -colorChangeThreshold )
+            airEarthColor = ElementColor( Element.Air ).ToHexString();
+        else if( m_airEarthSpectrum >= colorChangeThreshold )
+            airEarthColor = ElementColor( Element.Earth ).ToHexString();
+
+        var fireWaterColor = "white";
+        if ( m_fireWaterSpectrum <= -colorChangeThreshold )
+            fireWaterColor = ElementColor( Element.Fire ).ToHexString();
+        else if( m_fireWaterSpectrum >= colorChangeThreshold )
+            fireWaterColor = ElementColor( Element.Water ).ToHexString();
+
+        var statsStr = $"<color={airEarthColor}>Air << {m_airEarthSpectrum} >> Earth</color>\n"
+            + $"<color={fireWaterColor}>Fire << {m_fireWaterSpectrum} >> Water\n\n</color>";
         foreach ( var actor in m_playerList ) {
             statsStr += $"<color=green>{actor.Stats}</color>";
             if ( actor == m_activeActor ) statsStr += " <=";
@@ -274,24 +328,6 @@ public class BattleManager : MonoBehaviour
         Next();
     }
 
-    private enum PlayerMenuState
-    {
-        TopMenu,
-        SpellMenu
-    }
-
-    private PlayerMenuState m_curPlayerMenuState = PlayerMenuState.TopMenu;
-    private PlayerMenuState CurPlayerMenuState {
-        set {
-            m_curPlayerMenuState = value;
-
-            switch ( m_curPlayerMenuState ) {
-                case PlayerMenuState.SpellMenu: ShowControlsSpellMenu(); break;
-                case PlayerMenuState.TopMenu: ShowControlsTopMenu(); break;
-            }
-        }
-    }
-
     private void ShowControlsSpellMenu() {
         var keyboardStr = "(Keyboard) ";
         var gamepadStr = "(Gamepad) ";
@@ -303,21 +339,44 @@ public class BattleManager : MonoBehaviour
             gamepadStr += $"({m_castButton[i].displayName}) {spellStr}";
         }
 
-        Output( keyboardStr );
-        Output( gamepadStr );
+        keyboardStr += $"[{m_backKey.displayName}] Back";
+        gamepadStr += $"[{m_backButton.displayName}] Back";
+
+        m_menuDisplay.text = $"{keyboardStr}\n\n{gamepadStr}";
     }
 
     private void ShowControlsTopMenu() {
-        Output( $"[Keyboard] ({m_attackKey.displayName}) Attack / ({m_defendKey.displayName}) Defend" +
-            $"/ ({m_spellKey.displayName}) Spell" );
-        Output( $"[Gamepad] ({m_attackButton.displayName}) Attack / ({m_defendButton.displayName}) Defend" +
-            $"/ ({m_spellButton.displayName}) Spell" );
+        var keyboardStr = $"[Keyboard] ({m_attackKey.displayName}) Attack / ({m_defendKey.displayName}) Defend" +
+            $"/ ({m_spellKey.displayName}) Spell";
+        var gamepadStr = $"[Gamepad] ({m_attackButton.displayName}) Attack / ({m_defendButton.displayName}) Defend" +
+            $"/ ({m_spellButton.displayName}) Spell";
+
+        m_menuDisplay.text = $"{keyboardStr}\n\n{gamepadStr}";
     }
 
     private void UpdateTurnPlayer() {
         switch ( m_curPlayerMenuState ) {
             case PlayerMenuState.SpellMenu: PlayerSpellMenu(); break;
             case PlayerMenuState.TopMenu: PlayerTopMenu(); break;
+        }
+    }
+
+    private void ApplyElement( Element a_element, int a_power = 1 ) {
+        switch(a_element) {
+            case Element.Air: m_airEarthSpectrum -= a_power; break;
+            case Element.Earth: m_airEarthSpectrum += a_power; break;
+            case Element.Fire: m_fireWaterSpectrum -= a_power; break;
+            case Element.Water: m_fireWaterSpectrum += a_power; break;
+        }
+    }
+
+    private Color ElementColor( Element a_element ) {
+        switch(a_element) {
+            case Element.Air: return Color.yellow;
+            case Element.Earth: return Color.green;
+            case Element.Fire: return Color.red;
+            case Element.Water: return Color.cyan;
+            default: return Color.white;
         }
     }
 
@@ -330,13 +389,18 @@ public class BattleManager : MonoBehaviour
         var spells = m_activeActor.Spells;
         for ( var i = 0; i < spells.Length; ++i ) {
             if ( m_castButton[i].wasPressedThisFrame || m_castKey[i].wasPressedThisFrame ) {
-                var wasCast = m_activeActor.CastSpell( i );
-                if ( wasCast ) {
-                    Output( $"{m_activeActor.name} casts {spells[i].name} for {spells[i].Cost} CP" );
+                var roll = Random.Range( 0, m_enemyList.Count );
+                var target = m_enemyList[roll];
+                var damage = m_activeActor.CastSpell( i, target );
+                if ( damage > 0 ) {
+                    Output( $"{m_activeActor.name} casts {spells[i].name} for {spells[i].Cost} CP ~ {damage} damage" );
+                    ApplyElement( spells[i].Element );
                     Next();
                 } else {
                     Output( $"{m_activeActor.name} cannot cast {spells[i].name} (not enough CP)" );
                 }
+
+                return;
             }
         }
     }

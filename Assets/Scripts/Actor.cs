@@ -25,6 +25,9 @@ public class Actor : MonoBehaviour
 
     [SerializeField] private List<Spell> m_spellList = new List<Spell>();
 
+    [Header( "Debug" )]
+    [SerializeField] private int m_startChargePoints = 0;
+
     private int m_hitPoints = 0;
     private bool m_isDefending = false;
     private int m_chargePoints = 0;
@@ -38,13 +41,19 @@ public class Actor : MonoBehaviour
         return m_chargePoints >= m_spellList[a_index].Cost;
     }
 
-    public bool CastSpell( int a_index ) {
+    // returns -1 if cannot cast
+    public int CastSpell( int a_index, Actor a_target ) {
         if( CanCastSpell(a_index) == false )
-            return false;
+            return -1;
 
-        // TODO effect
+        var spell = m_spellList[a_index];
+        var damage = spell.Damage;
+        if ( spell.Element == a_target.m_innateElement )
+            damage = Mathf.FloorToInt( damage * BattleManager.instance.ResistMultiplier );
+        else if ( BattleManager.instance.OpposingElement[spell.Element] == a_target.m_innateElement )
+            damage = Mathf.FloorToInt( damage * BattleManager.instance.WeaknessMultiplier );
 
-        return true;
+        return a_target.Damage( damage );
     }
 
     public void Defend() {
@@ -63,6 +72,7 @@ public class Actor : MonoBehaviour
     }
 
     private void Start() {
+        m_chargePoints = m_startChargePoints;
         m_hitPoints = m_hitPointsMax;
     }
 }

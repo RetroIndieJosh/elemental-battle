@@ -7,7 +7,9 @@ public class Spell : ScriptableObject
 {
     [SerializeField] private int m_cost = 1;
     [SerializeField] private Element m_element = Element.None;
+    [SerializeField] private int m_damage = 1;
 
-    public Element Element {  get { return m_element; } }
     public int Cost {  get { return m_cost; } }
+    public int Damage {  get { return m_damage; } }
+    public Element Element {  get { return m_element; } }
 }
