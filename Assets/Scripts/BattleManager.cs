@@ -36,7 +36,6 @@ public class BattleManager : MonoBehaviour
 
     [SerializeField] private int m_speedMax = 1000;
     [SerializeField] private int m_turnOrderLookAhead = 5;
-    [SerializeField] private float m_aiTurnlengthSec = 0.5f;
 
     [Header("Element Sprites")]
     [SerializeField] private Sprite m_airSprite = null;
@@ -350,28 +349,33 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    private Actor m_nextActor = null;
+
     private void Next() {
         if ( m_isRunning == false ) return;
 
         RemoveDeadEnemies();
 
-        if( m_activeActor != null )
+        if ( m_activeActor != null )
             m_activeActor.ActorSprite.IsSelected = false;
 
         do {
-            m_activeActor = m_turnOrderList[0].actor;
+            m_nextActor = m_turnOrderList[0].actor;
             m_currentTurn = m_turnOrderList[0].turnValue;
             m_turnOrderList.RemoveAt( 0 );
-        } while ( m_activeActor.IsDead );
+        } while ( m_nextActor.IsDead );
+    }
+
+    private void StartTurn() {
+        m_activeActor = m_nextActor;
 
         m_activeActor.ActorSprite.IsSelected = true;
         m_activeActorDisplay.sprite = m_activeActor.Sprite;
 
         ReviseTurnOrder();
 
-        if ( m_playerList.Contains( m_activeActor ) ) {
+        if ( m_playerList.Contains( m_activeActor ) )
             CurPlayerMenuState = PlayerMenuState.TopMenu;
-        }
         m_activeActor.StartTurn();
         m_timeSinceTurnStart = 0f;
     }
@@ -422,6 +426,8 @@ public class BattleManager : MonoBehaviour
             var roll = Random.Range( 0, m_enemyList.Count );
             var target = m_enemyList[roll];
             var damage = m_activeActor.Attack( target );
+            var targetPos = target.ActorSprite.transform.position + Vector3.left;
+            m_activeActor.ActorSprite.AnimateAttack( targetPos );
             if ( damage >= 0 ) {
                 m_playerChargePoints += m_chargePointsPerAttack;
                 Output( $"{m_activeActor} attacks {target} for {damage} damage" );
@@ -607,6 +613,15 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
+        // wait for animation before switching actor
+        if ( m_activeActor == null ) StartTurn();
+        else if( m_nextActor != null ) {
+            if ( m_activeActor.ActorSprite.IsAnimating ) return;
+
+            StartTurn();
+            m_nextActor = null;
+        }
+
         m_enemyChargePoints = Mathf.Clamp( m_enemyChargePoints, 0, m_chargePointsMax );
         m_playerChargePoints = Mathf.Clamp( m_playerChargePoints, 0, m_chargePointsMax );
         m_chargePointsBar.FillPercent = (float)m_playerChargePoints / m_chargePointsMax;
@@ -642,14 +657,14 @@ public class BattleManager : MonoBehaviour
     }
 
     private void UpdateTurnAi() {
-        if ( m_timeSinceTurnStart < m_aiTurnlengthSec ) return;
-
         var roll = Random.Range( 0, m_playerList.Count );
         var target = m_playerList[roll];
         if ( target.IsDead ) {
             Output( $"{m_activeActor} tries to attack {target} but they're already dead" );
         } else {
             var damage = m_activeActor.Attack( target );
+            var targetPos = target.ActorSprite.transform.position + Vector3.right;
+            m_activeActor.ActorSprite.AnimateAttack( targetPos );
             if ( damage > 0 ) {
                 Output( $"{m_activeActor} attacks {target} for {damage} damage" );
                 m_enemyChargePoints += m_chargePointsPerAttack;

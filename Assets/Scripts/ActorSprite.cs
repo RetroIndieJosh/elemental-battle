@@ -6,6 +6,8 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class ActorSprite : MonoBehaviour
 {
+    public bool IsAnimating { private set; get; }
+
     public bool IsSelected {
         set {
             m_isSelected = value;
@@ -27,6 +29,61 @@ public class ActorSprite : MonoBehaviour
     private bool m_isSelected = false;
     private Vector3 m_startPos = Vector3.zero;
     private float m_selectedTime = 0f;
+
+    public void AnimateAttack( Vector3 a_targetPos ) {
+        StartCoroutine( AnimateAttackCoroutine( a_targetPos ) );
+    }
+
+    private IEnumerator AnimateAttackCoroutine( Vector3 a_targetPos ) {
+        IsAnimating = true;
+
+        var timeElapsed = 0f;
+        var moveTime = 0.5f;
+        var halfTime = moveTime / 2f;
+        var attackTime = 0.1f;
+
+        var peakY = 3f;
+
+        while ( timeElapsed < halfTime ) {
+            timeElapsed += Time.deltaTime;
+            var t = timeElapsed / halfTime;
+
+            var pos = Vector3.Lerp( m_startPos, a_targetPos, t );
+
+            var yt = 0f;
+            if ( t < 0.5f ) yt = t * 2f;
+            else yt = ( 1f - t ) * 2f;
+
+            pos.y = Mathf.Lerp( m_startPos.y, a_targetPos.y + peakY, yt );
+            transform.position = pos;
+
+            yield return null;
+        }
+
+        yield return new WaitForSeconds( attackTime );
+        m_selectedTime -= attackTime;
+
+        timeElapsed = 0f;
+        while ( timeElapsed < halfTime ) {
+            timeElapsed += Time.deltaTime;
+            var t = timeElapsed / halfTime;
+
+            var pos = Vector3.Lerp( a_targetPos, m_startPos, t );
+
+            var yt = 0f;
+            if ( t < 0.5f ) yt = t * 2f;
+            else yt = ( 1f - t ) * 2f;
+
+            pos.y = Mathf.Lerp( m_startPos.y, a_targetPos.y + peakY, yt );
+            transform.position = pos;
+
+            yield return null;
+        }
+
+        transform.position = m_startPos;
+
+        IsAnimating = false;
+    }
 
     void Update() {
         if( m_isSelected ) {

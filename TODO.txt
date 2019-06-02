@@ -1,6 +1,5 @@
 - move attacker to target when attacking
 
-- display field effect values in HUD
 - separate portrait from field sprite
 
 - player colorize:
