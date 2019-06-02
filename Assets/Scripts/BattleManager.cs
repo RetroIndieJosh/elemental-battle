@@ -38,8 +38,15 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private int m_turnOrderLookAhead = 5;
     [SerializeField] private float m_aiTurnlengthSec = 0.5f;
 
+    [Header("Element Sprites")]
+    [SerializeField] private Sprite m_airSprite = null;
+    [SerializeField] private Sprite m_earthSprite = null;
+    [SerializeField] private Sprite m_fireSprite = null;
+    [SerializeField] private Sprite m_waterSprite = null;
+
     // TODO move these to a visual handling component that queries battle manager
     [Header( "Visual" )]
+    [SerializeField] private GameObject m_fieldEffectDisplayParent = null;
     [SerializeField] private GameObject m_statusPortraitsParent = null;
     [SerializeField] private GameObject m_statusPortraitPrefab = null;
     [SerializeField] private FillBarUI m_chargePointsBar = null;
@@ -274,10 +281,57 @@ public class BattleManager : MonoBehaviour
 
         m_airEarthSpectrum = Mathf.Clamp( m_airEarthSpectrum, -m_fieldEffectMax, m_fieldEffectMax );
         m_fireWaterSpectrum = Mathf.Clamp( m_fireWaterSpectrum, -m_fieldEffectMax, m_fieldEffectMax );
+
+        // clear field effect
+        for( var i = 0; i < m_fieldEffectDisplayImage.Length; ++i )
+            m_fieldEffectDisplayImage[i].sprite = null;
+
+        var imageIndex = 0;
+
+        // air
+        for( var i = 0; i < -m_airEarthSpectrum; ++i ) {
+            m_fieldEffectDisplayImage[imageIndex].sprite = m_airSprite;
+            ++imageIndex;
+        }
+
+        // earth
+        for( var i = 0; i < m_airEarthSpectrum; ++i ) {
+            m_fieldEffectDisplayImage[imageIndex].sprite = m_earthSprite;
+            ++imageIndex;
+        }
+
+        // fire
+        for( var i = 0; i < -m_fireWaterSpectrum; ++i ) {
+            m_fieldEffectDisplayImage[imageIndex].sprite = m_fireSprite;
+            ++imageIndex;
+        }
+
+        // water
+        for( var i = 0; i < m_fireWaterSpectrum; ++i ) {
+            m_fieldEffectDisplayImage[imageIndex].sprite = m_waterSprite;
+            ++imageIndex;
+        }
+
+        for ( var i = 0; i < m_fieldEffectDisplayImage.Length; ++i ) {
+            if ( m_fieldEffectDisplayImage[i].sprite == null )
+                m_fieldEffectDisplayImage[i].color = Color.clear;
+            else m_fieldEffectDisplayImage[i].color = Color.white;
+        }
     }
+
+    private Image[] m_fieldEffectDisplayImage = null;
 
     private void Awake() {
         instance = this;
+
+        var fieldEffectDisplayCount = m_fieldEffectMax * 2;
+        m_fieldEffectDisplayImage = new Image[fieldEffectDisplayCount];
+        for( var i = 0; i < fieldEffectDisplayCount; ++i ) {
+            var go = new GameObject();
+            m_fieldEffectDisplayImage[i] = go.AddComponent<Image>();
+            m_fieldEffectDisplayImage[i].color = Color.clear;
+            go.transform.SetParent( m_fieldEffectDisplayParent.transform, false );
+        }
     }
 
     private bool CanCastSpell( int a_spellIndex ) {

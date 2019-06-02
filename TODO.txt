@@ -1,7 +1,7 @@
-- character portraits with HP
 - move attacker to target when attacking
 
 - display field effect values in HUD
+- separate portrait from field sprite
 
 - player colorize:
         attack
@@ -12,3 +12,5 @@
 - floating text for damage
 
 - generate attributes on build
+
+- BUG when sequence ends with players, goes beyond maximum
