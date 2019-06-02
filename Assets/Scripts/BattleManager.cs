@@ -40,6 +40,8 @@ public class BattleManager : MonoBehaviour
 
     // TODO move these to a visual handling component that queries battle manager
     [Header( "Visual" )]
+    [SerializeField] private GameObject m_statusPortraitsParent = null;
+    [SerializeField] private GameObject m_statusPortraitPrefab = null;
     [SerializeField] private FillBarUI m_chargePointsBar = null;
     [SerializeField] private TextMeshProUGUI m_chargePointsLabel = null;
     [SerializeField] private Image m_activeActorDisplay = null;
@@ -81,7 +83,6 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI m_menuDisplay = null;
     [SerializeField] private TextMeshProUGUI m_outputDisplay = null;
     [SerializeField] private int m_outputMaxLines = 10;
-    [SerializeField] private TextMeshProUGUI m_statsDisplay = null;
 
     private Actor m_activeActor = null;
     private int m_airEarthSpectrum = 0;
@@ -226,8 +227,16 @@ public class BattleManager : MonoBehaviour
         }
 
         for( var i = 0; i < m_playerList.Count; ++i ) {
+            var player = m_playerList[i];
+
             if ( i >= m_playerActorSpriteList.Count ) break;
-            m_playerActorSpriteList[i].Sprite = m_playerList[i].Sprite;
+            m_playerActorSpriteList[i].Sprite = player.Sprite;
+
+            // TODO make this less hacky
+            var statusPortrait = Instantiate( m_statusPortraitPrefab );
+            statusPortrait.GetComponentInChildren<Image>().sprite = player.Sprite;
+            statusPortrait.GetComponentInChildren<TextMeshProUGUI>().text = player.Stats;
+            statusPortrait.transform.SetParent( m_statusPortraitsParent.transform, false );
         }
 
         for( var i = 0; i < m_enemyList.Count; ++i ) {
@@ -575,15 +584,7 @@ public class BattleManager : MonoBehaviour
         else if( m_fireWaterSpectrum > m_fieldEffectThreshold )
             statsStr += $"Water: {m_fireWaterSpectrum}\n";
 
-        foreach ( var actor in m_playerList ) {
-            if ( actor == m_activeActor ) statsStr += "=> ";
-            statsStr += $"<color=white>{actor.Stats}</color>\n\n";
-        }
-        foreach ( var actor in m_enemyList ) {
-            if ( actor == m_activeActor ) statsStr += "=> ";
-            statsStr += $"<color=red>{actor.Stats}</color>\n\n";
-        }
-        m_statsDisplay.text = statsStr;
+        // TODO display field effect
     }
 
     private void UpdateTurnAi() {

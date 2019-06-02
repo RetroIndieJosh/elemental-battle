@@ -15,7 +15,7 @@ public class Actor : MonoBehaviour
 
     public string Stats {
         get {
-            var stats = $"{name} {m_hitPoints}/{HitPointsMax}hp";
+            var stats = $"{name} ({Element})\n{m_hitPoints}/{HitPointsMax} HP";
             if ( m_isDefending ) stats += " (defending)";
             return stats;
         }

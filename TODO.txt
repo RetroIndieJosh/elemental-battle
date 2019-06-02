@@ -1,13 +1,14 @@
-
 - character portraits with HP
-- turn order icons
-- "selected" sprite
-- "attack" sprite
 - move attacker to target when attacking
-- "defend" sprite
-- "cast" sprite
+
+- display field effect values in HUD
+
+- player colorize:
+        attack
+        defend
+        cast
+        selected
 - display spellcasting?
 - floating text for damage
-- player dead sprite
 
 - generate attributes on build
