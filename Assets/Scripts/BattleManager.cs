@@ -496,7 +496,8 @@ public class BattleManager : MonoBehaviour
         // TODO show active player larger
         foreach ( Transform child in m_turnOrderDisplayParent.transform )
             Destroy( child.gameObject );
-        foreach ( var turnData in m_turnOrderList ) {
+        var turnOrderListClamped = m_turnOrderList.Take( m_turnOrderLookAhead );
+        foreach ( var turnData in turnOrderListClamped ) {
             var imageObj = new GameObject();
             var image = imageObj.AddComponent<Image>();
             image.sprite = turnData.actor.ActorSprite.Sprite;
