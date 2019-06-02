@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 using TMPro;
+using System.Linq;
 
 [DisallowMultipleComponent]
 public class BattleManager : MonoBehaviour
@@ -285,6 +286,8 @@ public class BattleManager : MonoBehaviour
     }
 
     private void Next() {
+        if ( m_isRunning == false ) return;
+
         RemoveDeadEnemies();
 
         if( m_activeActor != null )
@@ -503,6 +506,8 @@ public class BattleManager : MonoBehaviour
 
             // do this here so all Start()s have run
             var actorList = FindObjectsOfType<Actor>();
+            if ( actorList.Count( a => a.name.Contains( "Enemy" ) && a.IsDead == false ) == 0 ) return;
+            if ( actorList.Count( a => a.name.Contains( "Player" ) && a.IsDead == false ) == 0 ) return;
             foreach ( var actor in actorList ) {
                 if ( actor.name.Contains( "Player" ) )
                     AddPlayer( actor );

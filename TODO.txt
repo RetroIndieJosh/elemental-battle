@@ -8,3 +8,4 @@
 - "cast" sprite
 - display spellcasting?
 - floating text for damage
+- remove dead enemy sprites (replace with "dead" sprite?)
