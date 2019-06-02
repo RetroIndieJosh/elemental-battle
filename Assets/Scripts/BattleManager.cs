@@ -243,7 +243,7 @@ public class BattleManager : MonoBehaviour
             var player = m_playerList[i];
 
             if ( i >= m_playerActorSpriteList.Count ) break;
-            m_playerActorSpriteList[i].Sprite = player.Sprite;
+            m_playerActorSpriteList[i].Sprite = player.FieldSprite;
 
             // TODO make this less hacky
             var statusPortrait = Instantiate( m_statusPortraitPrefab );
@@ -254,7 +254,7 @@ public class BattleManager : MonoBehaviour
 
         for ( var i = 0; i < m_enemyList.Count; ++i ) {
             if ( i >= m_enemyActorSpriteList.Count ) break;
-            m_enemyActorSpriteList[i].Sprite = m_enemyList[i].Sprite;
+            m_enemyActorSpriteList[i].Sprite = m_enemyList[i].FieldSprite;
         }
 
         m_isRunning = true;
@@ -380,7 +380,7 @@ public class BattleManager : MonoBehaviour
         m_nextActor = null;
 
         m_activeActor.ActorSprite.IsSelected = true;
-        m_activeActorDisplay.sprite = m_activeActor.Sprite;
+        m_activeActorDisplay.sprite = m_activeActor.FieldSprite;
 
         ReviseTurnOrder();
 
@@ -500,7 +500,7 @@ public class BattleManager : MonoBehaviour
         foreach ( var turnData in turnOrderListClamped ) {
             var imageObj = new GameObject();
             var image = imageObj.AddComponent<Image>();
-            image.sprite = turnData.actor.ActorSprite.Sprite;
+            image.sprite = turnData.actor.PortraitSprite;
             imageObj.transform.SetParent( m_turnOrderDisplayParent.transform, false );
         }
     }
@@ -618,7 +618,7 @@ public class BattleManager : MonoBehaviour
 
         // update player display
         for ( var i = 0; i < m_playerList.Count; ++i ) {
-            m_playerPortraitImage[i].sprite = m_playerList[i].ActorSprite.Sprite;
+            m_playerPortraitImage[i].sprite = m_playerList[i].PortraitSprite;
             m_playerPortraitTextMesh[i].text = m_playerList[i].Stats;
         }
 

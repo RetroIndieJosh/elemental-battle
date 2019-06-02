@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c8c68db1565f15d458eb7624776007c3, type: 3}
-  m_Name: Player (Water)
+  m_Name: Player (Earth)
   m_EditorClassIdentifier: 
   m_element: 3
   m_baseAttributes:
@@ -22,8 +22,8 @@ MonoBehaviour:
     m_hitPointsMax: 10
     m_speed: 10
     m_strength: 1
-  m_fieldSprite: {fileID: 21300000, guid: d1054f712cc065b4e822c26081b3fd8a, type: 3}
-  m_portraitSprite: {fileID: 21300000, guid: cea27e9f6da62074b9030ed46f201136, type: 3}
+  m_fieldSprite: {fileID: 21300000, guid: 2235ebd4f1358ee4e87a9b6f6e1d75d8, type: 3}
+  m_portraitSprite: {fileID: 21300000, guid: 9de10e5510676e34b98a7c653b855abb, type: 3}
   m_strengthIncPerLevel: 1
   m_hitPointsIncPerLevel: 7
   m_speedIncPerLevel: 3

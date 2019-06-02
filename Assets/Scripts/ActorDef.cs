@@ -65,7 +65,8 @@ public class ActorDef : ScriptableObject
     [SerializeField] private ActorAttributes m_baseAttributes = new ActorAttributes();
 
     [Header( "Visual" )]
-    [SerializeField] private Sprite m_sprite = null;
+    [SerializeField] private Sprite m_fieldSprite = null;
+    [SerializeField] private Sprite m_portraitSprite = null;
 
     [Header("Leveling")]
     [SerializeField] private float m_strengthIncPerLevel = 1f;
@@ -82,7 +83,8 @@ public class ActorDef : ScriptableObject
     [SerializeField] private List<ActorAttributes> m_attributeLevelList = new List<ActorAttributes>();
 
     public Element Element {  get { return m_element; } }
-    public Sprite Sprite {  get { return m_sprite; } }
+    public Sprite FieldSprite {  get { return m_fieldSprite; } }
+    public Sprite PortraitSprite {  get { return m_portraitSprite; } }
 
     public void GenerateAttributeLevelList() {
         m_attributeLevelList.Clear();

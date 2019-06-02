@@ -10,12 +10,22 @@ public class Actor : MonoBehaviour
 
     public Element Element {  get { return m_actorDef.Element; } }
     public bool IsDead {  get { return m_hitPoints <= 0; } }
-    public Sprite Sprite {  get { return m_actorDef.Sprite; } }
+    public Sprite FieldSprite {  get { return m_actorDef.FieldSprite; } }
+    public Sprite PortraitSprite {  get { return m_actorDef.PortraitSprite; } }
     public int TurnStep { get { return BattleManager.instance.SpeedMax / Speed; } }
 
     public string Stats {
         get {
-            var stats = $"{name} ({Element})\n{m_hitPoints}/{HitPointsMax} HP";
+            var healthPercent = (float)m_hitPoints / HitPointsMax;
+            var healthColor = Color.white;
+            if ( m_hitPoints == HitPointsMax ) healthColor = Color.green;
+            else if ( healthPercent < 0.2f ) healthColor = Color.red;
+            else if ( healthPercent < 0.4f ) healthColor = Color.yellow;
+
+            var healthColorStr = healthColor.ToHexString();
+            var stats = $"{name} {Element.ToString()[0]}\n" +
+                $"<color={healthColorStr}>{m_hitPoints}</color>/{HitPointsMax} HP";
+
             if ( m_isDefending ) stats += " (defending)";
             return stats;
         }
