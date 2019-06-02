@@ -37,6 +37,10 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private int m_speedMax = 1000;
     [SerializeField] private int m_turnOrderLookAhead = 5;
 
+    [Header( "Animation" )]
+    [SerializeField] private float m_attackMoveTime = 0.4f;
+    [SerializeField] private float m_attackStayTime = 0.1f;
+
     [Header( "Element Sprites" )]
     [SerializeField] private Sprite m_airSprite = null;
     [SerializeField] private Sprite m_earthSprite = null;
@@ -90,6 +94,9 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI m_menuDisplay = null;
     [SerializeField] private TextMeshProUGUI m_outputDisplay = null;
     [SerializeField] private int m_outputMaxLines = 10;
+
+    public float AttackMoveTime {  get { return m_attackMoveTime; } }
+    public float AttackStayTime {  get { return m_attackStayTime; } }
 
     private Image[] m_playerPortraitImage = null;
     private TextMeshProUGUI[] m_playerPortraitTextMesh = null;
@@ -402,6 +409,16 @@ public class BattleManager : MonoBehaviour
         m_outputDisplay.text = output;
     }
 
+    private void CastSpell( int a_spellIndex, Actor a_target ) {
+        var color = ElementColor( m_activeActor.Element );
+        m_activeActor.ActorSprite.Color = color;
+        if ( TryAttack( a_target, color ) == false ) return;
+
+        ApplyElement( m_activeActor.Element, m_activeActor.Spells[a_spellIndex].ElementPower );
+        if ( IsEnemy( m_activeActor ) ) m_enemyChargePoints -= SpellCost( a_spellIndex );
+        else m_playerChargePoints -= SpellCost( a_spellIndex );
+    }
+
     private void PlayerSpellMenu() {
         if ( m_backButton.wasPressedThisFrame || m_backKey.wasPressedThisFrame ) {
             CurPlayerMenuState = PlayerMenuState.TopMenu;
@@ -413,11 +430,7 @@ public class BattleManager : MonoBehaviour
             if ( m_castButton[i].wasPressedThisFrame || m_castKey[i].wasPressedThisFrame ) {
                 if ( CanCastSpell( i ) ) {
                     var target = m_enemyList.GetRandomElement();
-                    m_activeActor.ActorSprite.Color = ElementColor( m_activeActor.Element );
-                    if ( TryAttack( target ) ) {
-                        ApplyElement( m_activeActor.Element, spells[i].ElementPower );
-                        m_playerChargePoints -= SpellCost( i );
-                    }
+                    CastSpell( i, target );
                     Next();
                     return;
                 } else {
@@ -453,7 +466,7 @@ public class BattleManager : MonoBehaviour
         foreach ( var player in m_playerList )
             if ( player.IsDead ) player.ActorSprite.Color = Color.gray;
         foreach ( var enemy in m_enemyList )
-            if ( enemy.IsDead ) enemy.ActorSprite.Color = Color.clear;
+            enemy.ActorSprite.IsVisible = ( enemy.IsDead == false );
 
         m_turnOrderList.RemoveAll( data => data.actor.IsDead );
         m_enemyList.RemoveAll( enemy => enemy.IsDead );
@@ -675,6 +688,10 @@ public class BattleManager : MonoBehaviour
     }
 
     private bool TryAttack( Actor a_target ) {
+        return TryAttack( a_target, Color.yellow );
+    }
+
+    private bool TryAttack( Actor a_target, Color a_flashColor ) {
         if ( a_target.IsDead ) return false;
 
         var damage = m_activeActor.TryAttack( a_target );
@@ -683,6 +700,7 @@ public class BattleManager : MonoBehaviour
         var offset = IsEnemy( a_target ) ? Vector3.left : Vector3.right;
         var targetPos = a_target.ActorSprite.transform.position + offset;
         m_activeActor.ActorSprite.AnimateAttack( targetPos );
+        a_target.ActorSprite.Flash( a_flashColor, AttackMoveTime / 2f );
 
         if ( IsEnemy( m_activeActor ) ) m_enemyChargePoints += m_chargePointsPerAttack;
         else m_playerChargePoints += m_chargePointsPerAttack;

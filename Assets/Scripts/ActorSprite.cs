@@ -17,6 +17,17 @@ public class ActorSprite : MonoBehaviour
         }
     }
 
+    public bool IsVisible {
+        get { return m_isVisible; }
+        set {
+            m_isVisible = value;
+            if ( m_isVisible ) GetComponent<SpriteRenderer>().color = Color.white;
+            else GetComponent<SpriteRenderer>().color = Color.clear;
+        }
+    }
+
+    private bool m_isVisible = true;
+
     public Color Color {
         set { GetComponent<SpriteRenderer>().color = value; }
     }
@@ -38,15 +49,13 @@ public class ActorSprite : MonoBehaviour
         IsAnimating = true;
 
         var timeElapsed = 0f;
-        var moveTime = 0.5f;
-        var halfTime = moveTime / 2f;
-        var attackTime = 0.1f;
+        var halfMoveTime = BattleManager.instance.AttackMoveTime / 2f;
 
         var peakY = 3f;
 
-        while ( timeElapsed < halfTime ) {
+        while ( timeElapsed < halfMoveTime ) {
             timeElapsed += Time.deltaTime;
-            var t = timeElapsed / halfTime;
+            var t = timeElapsed / halfMoveTime;
 
             var pos = Vector3.Lerp( m_startPos, a_targetPos, t );
 
@@ -60,13 +69,12 @@ public class ActorSprite : MonoBehaviour
             yield return null;
         }
 
-        yield return new WaitForSeconds( attackTime );
-        m_selectedTime -= attackTime;
+        yield return new WaitForSeconds( BattleManager.instance.AttackStayTime );
 
         timeElapsed = 0f;
-        while ( timeElapsed < halfTime ) {
+        while ( timeElapsed < halfMoveTime ) {
             timeElapsed += Time.deltaTime;
-            var t = timeElapsed / halfTime;
+            var t = timeElapsed / halfMoveTime;
 
             var pos = Vector3.Lerp( a_targetPos, m_startPos, t );
 
@@ -83,6 +91,25 @@ public class ActorSprite : MonoBehaviour
         transform.position = m_startPos;
 
         IsAnimating = false;
+    }
+
+    public void Flash( Color a_color, float a_delaySec = 0f ) {
+        StartCoroutine( FlashCoroutine( a_color, a_delaySec ) );
+    }
+
+    private IEnumerator FlashCoroutine( Color a_color, float a_delaySec = 0f ) {
+        if ( a_delaySec > Mathf.Epsilon )
+            yield return new WaitForSeconds( a_delaySec );
+
+        if ( m_isVisible == false ) yield break;
+
+        var spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.color = a_color;
+        yield return new WaitForSeconds( 0.1f );
+
+        if ( m_isVisible == false ) yield break;
+
+        spriteRenderer.color = Color.white;
     }
 
     void Update() {

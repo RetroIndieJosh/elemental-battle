@@ -61,10 +61,12 @@ public class Actor : MonoBehaviour
 
     public void Defend() {
         m_isDefending = true;
+        ActorSprite.transform.localScale = new Vector3( -1f, 1f );
     }
 
     public void StartTurn() {
         m_isDefending = false;
+        ActorSprite.transform.localScale = Vector3.one;
     }
 
     private int Damage( int a_damage ) {
