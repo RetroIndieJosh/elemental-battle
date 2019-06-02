@@ -16,13 +16,13 @@ MonoBehaviour:
   m_baseAttributes:
     name: 
     spellList: []
-    m_hitPointsMax: 10
+    m_hitPointsMax: 1
     m_speed: 10
     m_strength: 1
   m_sprite: {fileID: 7994224659595031685, guid: 4d1544d03721a5943b26a6682f775533,
     type: 3}
   m_strengthIncPerLevel: 1
-  m_hitPointsIncPerLevel: 10
+  m_hitPointsIncPerLevel: 0
   m_speedIncPerLevel: 3
   m_levelCap: 100
   m_spellList:

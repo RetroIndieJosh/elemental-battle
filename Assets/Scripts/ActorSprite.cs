@@ -15,6 +15,10 @@ public class ActorSprite : MonoBehaviour
         }
     }
 
+    public Color Color {
+        set { GetComponent<SpriteRenderer>().color = value; }
+    }
+
     public Sprite Sprite {
         get { return GetComponent<SpriteRenderer>().sprite; }
         set { GetComponent<SpriteRenderer>().sprite = value; }

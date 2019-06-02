@@ -379,6 +379,11 @@ public class BattleManager : MonoBehaviour
     }
 
     private void RemoveDeadEnemies() {
+        foreach( var player in m_playerList )
+            player.ActorSprite.Color = player.IsDead ? Color.gray : Color.white;
+        foreach ( var enemy in m_enemyList )
+            if ( enemy.IsDead ) enemy.ActorSprite.Color = Color.clear;
+
         m_turnOrderList.RemoveAll( data => data.actor.IsDead );
         m_enemyList.RemoveAll( enemy => enemy.IsDead );
     }

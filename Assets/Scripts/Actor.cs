@@ -61,6 +61,7 @@ public class Actor : MonoBehaviour
         if ( m_isDefending ) a_damage /= 2;
         a_damage = Mathf.Max( a_damage, 1 );
         m_hitPoints -= a_damage;
+        if ( m_hitPoints < 0 ) m_hitPoints = 0;
         return a_damage;
     }
 
