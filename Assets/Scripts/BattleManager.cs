@@ -40,6 +40,8 @@ public class BattleManager : MonoBehaviour
 
     // TODO move these to a visual handling component that queries battle manager
     [Header( "Visual" )]
+    [SerializeField] private FillBarUI m_chargePointsBar = null;
+    [SerializeField] private TextMeshProUGUI m_chargePointsLabel = null;
     [SerializeField] private Image m_activeActorDisplay = null;
     [SerializeField] private GameObject m_turnOrderDisplayParent = null;
     [SerializeField] private Material m_fieldPrimaryMaterial = null;
@@ -539,6 +541,8 @@ public class BattleManager : MonoBehaviour
 
         m_enemyChargePoints = Mathf.Clamp( m_enemyChargePoints, 0, m_chargePointsMax );
         m_playerChargePoints = Mathf.Clamp( m_playerChargePoints, 0, m_chargePointsMax );
+        m_chargePointsBar.FillPercent = (float)m_playerChargePoints / m_chargePointsMax;
+        m_chargePointsLabel.text = $"{m_playerChargePoints}/{m_chargePointsMax} CP";
 
         UpdateHud();
 
