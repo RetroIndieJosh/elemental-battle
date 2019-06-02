@@ -13,3 +13,4 @@
 - generate attributes on build
 
 - BUG when sequence ends with players, goes beyond maximum
+- BUG CP cost for spells not honoring field effect?

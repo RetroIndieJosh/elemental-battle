@@ -367,7 +367,10 @@ public class BattleManager : MonoBehaviour
     }
 
     private void StartTurn() {
+        if( m_activeActor != null )
+            m_activeActor.ActorSprite.Color = Color.white;
         m_activeActor = m_nextActor;
+        m_nextActor = null;
 
         m_activeActor.ActorSprite.IsSelected = true;
         m_activeActorDisplay.sprite = m_activeActor.Sprite;
@@ -408,9 +411,17 @@ public class BattleManager : MonoBehaviour
                     Output( $"{m_activeActor.name} casts {spells[i].name} for {spells[i].Cost} CP ~ {damage} damage" );
                     ApplyElement( m_activeActor.Element, spells[i].ElementPower );
 
-                    if ( m_enemyList.Contains( m_activeActor ) )
+                    var targetPos = target.ActorSprite.transform.position;
+                    if ( m_enemyList.Contains( m_activeActor ) ) {
                         m_enemyChargePoints -= SpellCost( i );
-                    else m_playerChargePoints -= SpellCost( i );
+                        targetPos += Vector3.right;
+                    } else {
+                        m_playerChargePoints -= SpellCost( i );
+                        targetPos += Vector3.left;
+                    }
+                    m_activeActor.ActorSprite.Color = ElementColor( m_activeActor.Element );
+                    m_activeActor.ActorSprite.AnimateAttack( targetPos );
+
                     Next();
                 } else {
                     Output( $"{m_activeActor.name} cannot cast {spells[i].name} (not enough CP)" );
@@ -447,9 +458,10 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    // TODO set player back to white color when revived
     private void RemoveDeadEnemies() {
-        foreach( var player in m_playerList )
-            player.ActorSprite.Color = player.IsDead ? Color.gray : Color.white;
+        foreach ( var player in m_playerList )
+            if ( player.IsDead ) player.ActorSprite.Color = Color.gray;
         foreach ( var enemy in m_enemyList )
             if ( enemy.IsDead ) enemy.ActorSprite.Color = Color.clear;
 
@@ -619,7 +631,6 @@ public class BattleManager : MonoBehaviour
             if ( m_activeActor.ActorSprite.IsAnimating ) return;
 
             StartTurn();
-            m_nextActor = null;
         }
 
         m_enemyChargePoints = Mathf.Clamp( m_enemyChargePoints, 0, m_chargePointsMax );
