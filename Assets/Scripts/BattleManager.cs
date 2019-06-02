@@ -37,7 +37,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private int m_speedMax = 1000;
     [SerializeField] private int m_turnOrderLookAhead = 5;
 
-    [Header("Element Sprites")]
+    [Header( "Element Sprites" )]
     [SerializeField] private Sprite m_airSprite = null;
     [SerializeField] private Sprite m_earthSprite = null;
     [SerializeField] private Sprite m_fireSprite = null;
@@ -45,6 +45,7 @@ public class BattleManager : MonoBehaviour
 
     // TODO move these to a visual handling component that queries battle manager
     [Header( "Visual" )]
+    [SerializeField] private FloatText m_damageText = null;
     [SerializeField] private GameObject m_fieldEffectDisplayParent = null;
     [SerializeField] private GameObject m_statusPortraitsParent = null;
     [SerializeField] private GameObject m_statusPortraitPrefab = null;
@@ -57,7 +58,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField] List<ActorSprite> m_enemyActorSpriteList = new List<ActorSprite>();
     [SerializeField] List<ActorSprite> m_playerActorSpriteList = new List<ActorSprite>();
 
-    [Header("Charge Points")]
+    [Header( "Charge Points" )]
     [SerializeField] private int m_chargePointsPerAttack = 1;
     [SerializeField] private int m_chargePointsMax = 10;
 
@@ -67,7 +68,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private float m_primaryFieldEffectOpposeMult = 2f;
     [SerializeField] private float m_secondaryFieldEffectOpposeMult = 1.5f;
 
-    [SerializeField, Tooltip("The point at which element field effects (+/-) take effect")]
+    [SerializeField, Tooltip( "The point at which element field effects (+/-) take effect" )]
     private int m_fieldEffectThreshold = 2;
 
     [SerializeField, Tooltip( "The maximum field effect (+/-) per element" )]
@@ -81,7 +82,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private bool m_enterBattleOnStart = false;
     [SerializeField] private bool m_showTurnNumbers = false;
 
-    [Header("Game State")]
+    [Header( "Game State" )]
     [SerializeField] private GameObject m_gameOver = null;
     [SerializeField] private GameObject m_win = null;
 
@@ -89,6 +90,9 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI m_menuDisplay = null;
     [SerializeField] private TextMeshProUGUI m_outputDisplay = null;
     [SerializeField] private int m_outputMaxLines = 10;
+
+    private Image[] m_playerPortraitImage = null;
+    private TextMeshProUGUI[] m_playerPortraitTextMesh = null;
 
     private Actor m_activeActor = null;
     private int m_airEarthSpectrum = 0;
@@ -184,7 +188,7 @@ public class BattleManager : MonoBehaviour
         if ( m_isRunning ) ReviseTurnOrder();
     }
 
-    public void AddEnemy( Actor a_enemy , bool a_reviseTurnOrder = true ) {
+    public void AddEnemy( Actor a_enemy, bool a_reviseTurnOrder = true ) {
         Output( $"Add enemy {a_enemy.name}" );
 
         var index = m_enemyList.Count;
@@ -203,7 +207,7 @@ public class BattleManager : MonoBehaviour
         var index = m_playerList.Count;
         m_playerList.Add( a_player );
 
-        if( index < m_playerActorSpriteList.Count )
+        if ( index < m_playerActorSpriteList.Count )
             a_player.ActorSprite = m_playerActorSpriteList[index];
         else Debug.LogWarning( $"[BattleManager] Missing player sprite index {index}" );
 
@@ -232,7 +236,10 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
-        for( var i = 0; i < m_playerList.Count; ++i ) {
+        m_playerPortraitImage = new Image[m_playerList.Count];
+        m_playerPortraitTextMesh = new TextMeshProUGUI[m_playerList.Count];
+
+        for ( var i = 0; i < m_playerList.Count; ++i ) {
             var player = m_playerList[i];
 
             if ( i >= m_playerActorSpriteList.Count ) break;
@@ -240,12 +247,12 @@ public class BattleManager : MonoBehaviour
 
             // TODO make this less hacky
             var statusPortrait = Instantiate( m_statusPortraitPrefab );
-            statusPortrait.GetComponentInChildren<Image>().sprite = player.Sprite;
-            statusPortrait.GetComponentInChildren<TextMeshProUGUI>().text = player.Stats;
+            m_playerPortraitImage[i] = statusPortrait.GetComponentInChildren<Image>();
+            m_playerPortraitTextMesh[i] = statusPortrait.GetComponentInChildren<TextMeshProUGUI>();
             statusPortrait.transform.SetParent( m_statusPortraitsParent.transform, false );
         }
 
-        for( var i = 0; i < m_enemyList.Count; ++i ) {
+        for ( var i = 0; i < m_enemyList.Count; ++i ) {
             if ( i >= m_enemyActorSpriteList.Count ) break;
             m_enemyActorSpriteList[i].Sprite = m_enemyList[i].Sprite;
         }
@@ -282,31 +289,31 @@ public class BattleManager : MonoBehaviour
         m_fireWaterSpectrum = Mathf.Clamp( m_fireWaterSpectrum, -m_fieldEffectMax, m_fieldEffectMax );
 
         // clear field effect
-        for( var i = 0; i < m_fieldEffectDisplayImage.Length; ++i )
+        for ( var i = 0; i < m_fieldEffectDisplayImage.Length; ++i )
             m_fieldEffectDisplayImage[i].sprite = null;
 
         var imageIndex = 0;
 
         // air
-        for( var i = 0; i < -m_airEarthSpectrum; ++i ) {
+        for ( var i = 0; i < -m_airEarthSpectrum; ++i ) {
             m_fieldEffectDisplayImage[imageIndex].sprite = m_airSprite;
             ++imageIndex;
         }
 
         // earth
-        for( var i = 0; i < m_airEarthSpectrum; ++i ) {
+        for ( var i = 0; i < m_airEarthSpectrum; ++i ) {
             m_fieldEffectDisplayImage[imageIndex].sprite = m_earthSprite;
             ++imageIndex;
         }
 
         // fire
-        for( var i = 0; i < -m_fireWaterSpectrum; ++i ) {
+        for ( var i = 0; i < -m_fireWaterSpectrum; ++i ) {
             m_fieldEffectDisplayImage[imageIndex].sprite = m_fireSprite;
             ++imageIndex;
         }
 
         // water
-        for( var i = 0; i < m_fireWaterSpectrum; ++i ) {
+        for ( var i = 0; i < m_fireWaterSpectrum; ++i ) {
             m_fieldEffectDisplayImage[imageIndex].sprite = m_waterSprite;
             ++imageIndex;
         }
@@ -325,7 +332,7 @@ public class BattleManager : MonoBehaviour
 
         var fieldEffectDisplayCount = m_fieldEffectMax * 2;
         m_fieldEffectDisplayImage = new Image[fieldEffectDisplayCount];
-        for( var i = 0; i < fieldEffectDisplayCount; ++i ) {
+        for ( var i = 0; i < fieldEffectDisplayCount; ++i ) {
             var go = new GameObject();
             m_fieldEffectDisplayImage[i] = go.AddComponent<Image>();
             m_fieldEffectDisplayImage[i].color = Color.clear;
@@ -367,7 +374,7 @@ public class BattleManager : MonoBehaviour
     }
 
     private void StartTurn() {
-        if( m_activeActor != null )
+        if ( m_activeActor != null )
             m_activeActor.ActorSprite.Color = Color.white;
         m_activeActor = m_nextActor;
         m_nextActor = null;
@@ -405,24 +412,14 @@ public class BattleManager : MonoBehaviour
         for ( var i = 0; i < spells.Length; ++i ) {
             if ( m_castButton[i].wasPressedThisFrame || m_castKey[i].wasPressedThisFrame ) {
                 if ( CanCastSpell( i ) ) {
-                    var roll = Random.Range( 0, m_enemyList.Count );
-                    var target = m_enemyList[roll];
-                    var damage = m_activeActor.CastSpell( i, target );
-                    Output( $"{m_activeActor.name} casts {spells[i].name} for {spells[i].Cost} CP ~ {damage} damage" );
-                    ApplyElement( m_activeActor.Element, spells[i].ElementPower );
-
-                    var targetPos = target.ActorSprite.transform.position;
-                    if ( m_enemyList.Contains( m_activeActor ) ) {
-                        m_enemyChargePoints -= SpellCost( i );
-                        targetPos += Vector3.right;
-                    } else {
-                        m_playerChargePoints -= SpellCost( i );
-                        targetPos += Vector3.left;
-                    }
+                    var target = m_enemyList.GetRandomElement();
                     m_activeActor.ActorSprite.Color = ElementColor( m_activeActor.Element );
-                    m_activeActor.ActorSprite.AnimateAttack( targetPos );
-
+                    if ( TryAttack( target ) ) {
+                        ApplyElement( m_activeActor.Element, spells[i].ElementPower );
+                        m_playerChargePoints -= SpellCost( i );
+                    }
                     Next();
+                    return;
                 } else {
                     Output( $"{m_activeActor.name} cannot cast {spells[i].name} (not enough CP)" );
                 }
@@ -434,15 +431,9 @@ public class BattleManager : MonoBehaviour
 
     private void PlayerTopMenu() {
         if ( m_attackButton.wasPressedThisFrame || m_attackKey.wasPressedThisFrame ) {
-            var roll = Random.Range( 0, m_enemyList.Count );
-            var target = m_enemyList[roll];
-            var damage = m_activeActor.Attack( target );
-            var targetPos = target.ActorSprite.transform.position + Vector3.left;
-            m_activeActor.ActorSprite.AnimateAttack( targetPos );
-            if ( damage >= 0 ) {
+            var target = m_enemyList.GetRandomElement();
+            if( TryAttack( target ) )
                 m_playerChargePoints += m_chargePointsPerAttack;
-                Output( $"{m_activeActor} attacks {target} for {damage} damage" );
-            }
             Next();
         } else if ( m_defendButton.wasPressedThisFrame || m_defendKey.wasPressedThisFrame ) {
             m_activeActor.Defend();
@@ -606,15 +597,15 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
-        if( m_enemyList.Count == 0 ) {
+        if ( m_enemyList.Count == 0 ) {
             m_win.SetActive( true );
             m_isRunning = false;
             return;
         }
 
         var gameOver = true;
-        foreach( var player in m_playerList ) {
-            if( player.IsDead == false ) {
+        foreach ( var player in m_playerList ) {
+            if ( player.IsDead == false ) {
                 gameOver = false;
                 break;
             }
@@ -625,9 +616,15 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
+        // update player display
+        for ( var i = 0; i < m_playerList.Count; ++i ) {
+            m_playerPortraitImage[i].sprite = m_playerList[i].ActorSprite.Sprite;
+            m_playerPortraitTextMesh[i].text = m_playerList[i].Stats;
+        }
+
         // wait for animation before switching actor
         if ( m_activeActor == null ) StartTurn();
-        else if( m_nextActor != null ) {
+        else if ( m_nextActor != null ) {
             if ( m_activeActor.ActorSprite.IsAnimating ) return;
 
             StartTurn();
@@ -656,32 +653,45 @@ public class BattleManager : MonoBehaviour
         var statsStr = "";
         if ( m_airEarthSpectrum < -m_fieldEffectThreshold )
             statsStr += $"Air: {-m_airEarthSpectrum}\n";
-        else if( m_airEarthSpectrum > m_fieldEffectThreshold )
+        else if ( m_airEarthSpectrum > m_fieldEffectThreshold )
             statsStr += $"Earth: {m_airEarthSpectrum}\n";
 
         if ( m_fireWaterSpectrum < -m_fieldEffectThreshold )
             statsStr += $"Fire: {-m_fireWaterSpectrum}\n";
-        else if( m_fireWaterSpectrum > m_fieldEffectThreshold )
+        else if ( m_fireWaterSpectrum > m_fieldEffectThreshold )
             statsStr += $"Water: {m_fireWaterSpectrum}\n";
 
         // TODO display field effect
     }
 
     private void UpdateTurnAi() {
-        var roll = Random.Range( 0, m_playerList.Count );
-        var target = m_playerList[roll];
-        if ( target.IsDead ) {
-            Output( $"{m_activeActor} tries to attack {target} but they're already dead" );
-        } else {
-            var damage = m_activeActor.Attack( target );
-            var targetPos = target.ActorSprite.transform.position + Vector3.right;
-            m_activeActor.ActorSprite.AnimateAttack( targetPos );
-            if ( damage > 0 ) {
-                Output( $"{m_activeActor} attacks {target} for {damage} damage" );
-                m_enemyChargePoints += m_chargePointsPerAttack;
-            }
-        }
+        var target = m_playerList.GetRandomElement();
+        TryAttack( target );
         Next();
+    }
+
+    private bool IsEnemy( Actor a_actor ) {
+        return m_enemyList.Contains( a_actor );
+    }
+
+    private bool TryAttack( Actor a_target ) {
+        if ( a_target.IsDead ) return false;
+
+        var damage = m_activeActor.TryAttack( a_target );
+        if ( damage < 0 ) return false;
+
+        var offset = IsEnemy( a_target ) ? Vector3.left : Vector3.right;
+        var targetPos = a_target.ActorSprite.transform.position + offset;
+        m_activeActor.ActorSprite.AnimateAttack( targetPos );
+
+        if ( IsEnemy( m_activeActor ) ) m_enemyChargePoints += m_chargePointsPerAttack;
+        else m_playerChargePoints += m_chargePointsPerAttack;
+
+        m_damageText.transform.position = a_target.ActorSprite.transform.position + Vector3.up;
+        m_damageText.Text = $"{damage}";
+        m_damageText.Show();
+
+        return true;
     }
 
     private void UpdateTurnPlayer() {
@@ -699,6 +709,11 @@ static public class ListExt
         var g = Mathf.FloorToInt( c.g * 255 );
         var b = Mathf.FloorToInt( c.b * 255 );
         return $"#{r:X2}{g:X2}{b:X2}";
+    }
+
+    public static T GetRandomElement<T>( this List<T> a_list ) {
+        var roll = Random.Range( 0, a_list.Count );
+        return a_list[roll];
     }
 
     public static string ToString( this List<MonoBehaviour> a_list, string a_delimiter, string a_endDelimiter = null ) {

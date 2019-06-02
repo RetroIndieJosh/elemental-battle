@@ -34,7 +34,7 @@ public class Actor : MonoBehaviour
     private int m_hitPoints = 0;
     private bool m_isDefending = false;
 
-    public int Attack( Actor a_target ) {
+    public int TryAttack( Actor a_target ) {
         return a_target.Damage( Strength );
     }
 

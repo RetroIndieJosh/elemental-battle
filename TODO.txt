@@ -1,5 +1,3 @@
-- move attacker to target when attacking
-
 - separate portrait from field sprite
 
 - player colorize:
@@ -7,10 +5,10 @@
         defend
         cast
         selected
-- display spellcasting?
-- floating text for damage
+- flash player status when hit
 
 - generate attributes on build
 
 - BUG when sequence ends with players, goes beyond maximum
 - BUG CP cost for spells not honoring field effect?
+- BUG player stats don't update
