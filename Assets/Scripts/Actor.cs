@@ -10,6 +10,7 @@ public class Actor : MonoBehaviour
 
     public Element Element {  get { return m_actorDef.Element; } }
     public bool IsDead {  get { return m_hitPoints <= 0; } }
+    public Sprite Sprite {  get { return m_actorDef.Sprite; } }
     public int TurnStep { get { return BattleManager.instance.SpeedMax / Speed; } }
 
     public string Stats {
@@ -21,6 +22,8 @@ public class Actor : MonoBehaviour
     }
 
     public Spell[] Spells {  get { return SpellList.ToArray(); } }
+
+    public ActorSprite ActorSprite = null;
 
     private int Strength { get { return m_attributes.Strength; } }
     private int HitPointsMax { get { return m_attributes.HitPointsMax; } }

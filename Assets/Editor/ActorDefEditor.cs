@@ -16,6 +16,7 @@ public class ActorDefEditor : Editor
         DrawDefaultInspector();
 
         var actorDef = target as ActorDef;
+        GUILayout.Label( "WARNING: Overwrites all Level Tweaking!", EditorStyles.boldLabel );
         if( GUILayout.Button("Generate Attributes" ) ) {
             actorDef.GenerateAttributeLevelList();
         }

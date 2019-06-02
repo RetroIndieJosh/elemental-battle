@@ -5,8 +5,8 @@ using UnityEngine;
 [System.Serializable]
 class SpellLevel
 {
-    public Spell spell;
-    public int level;
+    public Spell spell = null;
+    public int level = 0;
 }
 
 [System.Serializable]
@@ -61,8 +61,11 @@ public class ActorAttributes
 public class ActorDef : ScriptableObject
 {
     [Header( "Base Attributes" )]
-    [SerializeField] Element m_element = Element.None;
-    [SerializeField] ActorAttributes m_baseAttributes = new ActorAttributes();
+    [SerializeField] private Element m_element = Element.None;
+    [SerializeField] private ActorAttributes m_baseAttributes = new ActorAttributes();
+
+    [Header( "Visual" )]
+    [SerializeField] private Sprite m_sprite = null;
 
     [Header("Leveling")]
     [SerializeField] private float m_strengthIncPerLevel = 1f;
@@ -72,11 +75,14 @@ public class ActorDef : ScriptableObject
     [SerializeField, Tooltip("0 to use universal level cap")]
     private int m_levelCap = 100;
 
+    [Header("Spells")]
     [SerializeField] private List<SpellLevel> m_spellList = new List<SpellLevel>();
 
+    [Header("Level Tweaking")]
     [SerializeField] private List<ActorAttributes> m_attributeLevelList = new List<ActorAttributes>();
 
     public Element Element {  get { return m_element; } }
+    public Sprite Sprite {  get { return m_sprite; } }
 
     public void GenerateAttributeLevelList() {
         m_attributeLevelList.Clear();

@@ -36,15 +36,19 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private int m_turnOrderLookAhead = 5;
     [SerializeField] private float m_aiTurnlengthSec = 0.5f;
 
+    [Header( "Visual" )]
+    [SerializeField] List<ActorSprite> m_enemyActorSpriteList = new List<ActorSprite>();
+    [SerializeField] List<ActorSprite> m_playerActorSpriteList = new List<ActorSprite>();
+
     [Header("Charge Points")]
     [SerializeField] private int m_chargePointsPerAttack = 1;
     [SerializeField] private int m_chargePointsMax = 10;
 
-    [Header( "Field Effect" )]
-    [SerializeField] private float m_primaryFieldEffectMatchMult = 2f;
-    [SerializeField] private float m_secondaryFieldEffectMatchMult = 2f;
+    [Header( "Field Effect on CP Costs" )]
+    [SerializeField] private float m_primaryFieldEffectMatchMult = 0.5f;
+    [SerializeField] private float m_secondaryFieldEffectMatchMult = 0.75f;
     [SerializeField] private float m_primaryFieldEffectOpposeMult = 2f;
-    [SerializeField] private float m_secondaryFieldEffectOpposeMult = 2f;
+    [SerializeField] private float m_secondaryFieldEffectOpposeMult = 1.5f;
 
     [SerializeField, Tooltip("The point at which element field effects (+/-) take effect")]
     private int m_fieldEffectThreshold = 2;
@@ -161,26 +165,40 @@ public class BattleManager : MonoBehaviour
     }
 
     public void AddEnemies( List<Actor> a_enemyList ) {
-        Output( $"Add enemies: {a_enemyList.ToString( ", " )} " );
-        m_enemyList.AddRange( a_enemyList );
+        foreach ( var enemy in a_enemyList )
+            AddEnemy( enemy, false );
         if ( m_isRunning ) ReviseTurnOrder();
     }
 
-    public void AddEnemy( Actor a_enemy ) {
+    public void AddEnemy( Actor a_enemy , bool a_reviseTurnOrder = true ) {
         Output( $"Add enemy {a_enemy.name}" );
+
+        var index = m_enemyList.Count;
         m_enemyList.Add( a_enemy );
-        if ( m_isRunning ) ReviseTurnOrder();
+
+        if ( index < m_enemyActorSpriteList.Count )
+            a_enemy.ActorSprite = m_enemyActorSpriteList[index];
+        else Debug.LogWarning( $"[BattleManager] Missing enemy sprite index {index}" );
+
+        if ( a_reviseTurnOrder && m_isRunning ) ReviseTurnOrder();
     }
 
-    public void AddPlayer( Actor a_player ) {
+    public void AddPlayer( Actor a_player, bool a_reviseTurnOrder = true ) {
         Output( $"Add player {a_player.name}" );
+
+        var index = m_playerList.Count;
         m_playerList.Add( a_player );
-        if ( m_isRunning ) ReviseTurnOrder();
+
+        if( index < m_playerActorSpriteList.Count )
+            a_player.ActorSprite = m_playerActorSpriteList[index];
+        else Debug.LogWarning( $"[BattleManager] Missing player sprite index {index}" );
+
+        if ( m_isRunning && a_reviseTurnOrder ) ReviseTurnOrder();
     }
 
     public void AddPlayers( List<Actor> a_playerList ) {
-        Output( $"Add players: {a_playerList.ToString( ", " )}" );
-        m_playerList.AddRange( a_playerList );
+        foreach ( var player in a_playerList )
+            AddPlayer( player, false );
         if ( m_isRunning ) ReviseTurnOrder();
     }
 
@@ -206,6 +224,16 @@ public class BattleManager : MonoBehaviour
         Next();
 
         Output( $"Start {m_playerList.Count} vs {m_enemyList.Count}, {m_activeActor} first" );
+
+        for( var i = 0; i < m_playerList.Count; ++i ) {
+            if ( i >= m_playerActorSpriteList.Count ) break;
+            m_playerActorSpriteList[i].Sprite = m_playerList[i].Sprite;
+        }
+
+        for( var i = 0; i < m_enemyList.Count; ++i ) {
+            if ( i >= m_enemyActorSpriteList.Count ) break;
+            m_enemyActorSpriteList[i].Sprite = m_enemyList[i].Sprite;
+        }
     }
 
     private void ApplyElement( Element a_element, int a_power = 1 ) {
@@ -255,11 +283,16 @@ public class BattleManager : MonoBehaviour
     private void Next() {
         RemoveDeadEnemies();
 
+        if( m_activeActor != null )
+            m_activeActor.ActorSprite.IsSelected = false;
+
         do {
             m_activeActor = m_turnOrderList[0].actor;
             m_currentTurn = m_turnOrderList[0].turnValue;
             m_turnOrderList.RemoveAt( 0 );
         } while ( m_activeActor.IsDead );
+
+        m_activeActor.ActorSprite.IsSelected = true;
 
         ReviseTurnOrder();
 
@@ -404,17 +437,17 @@ public class BattleManager : MonoBehaviour
         var primary = FieldElementPrimary;
         if ( primary != Element.None ) {
             if ( element == primary )
-                cost = Mathf.FloorToInt( cost * 0.5f );
+                cost = Mathf.FloorToInt( cost * m_primaryFieldEffectMatchMult );
             else if ( element == OpposingElement[primary] )
-                cost = cost * 2;
+                cost = Mathf.FloorToInt( cost * m_primaryFieldEffectOpposeMult );
         }
 
         var secondary = FieldElementSecondary;
         if ( secondary != Element.None ) {
             if ( element == secondary )
-                cost = Mathf.FloorToInt( cost * 0.75f );
+                cost = Mathf.FloorToInt( cost * m_secondaryFieldEffectMatchMult );
             else if ( element == OpposingElement[secondary] )
-                cost = Mathf.FloorToInt( cost * 1.5f );
+                cost = Mathf.FloorToInt( cost * m_secondaryFieldEffectOpposeMult );
         }
 
         return Mathf.Max( 1, cost );
