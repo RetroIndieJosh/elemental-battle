@@ -1,0 +1,10 @@
+- character portraits with HP
+- CP bar
+- turn order icons
+- "selected" sprite
+- "attack" sprite
+- move attacker to target when attacking
+- "defend" sprite
+- "cast" sprite
+- display spellcasting?
+- floating text for damage

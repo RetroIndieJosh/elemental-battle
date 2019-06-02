@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 using TMPro;
@@ -36,7 +37,10 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private int m_turnOrderLookAhead = 5;
     [SerializeField] private float m_aiTurnlengthSec = 0.5f;
 
+    // TODO move these to a visual handling component that queries battle manager
     [Header( "Visual" )]
+    [SerializeField] private Image m_activeActorDisplay = null;
+    [SerializeField] private GameObject m_turnOrderDisplayParent = null;
     [SerializeField] private Material m_fieldPrimaryMaterial = null;
     [SerializeField] private Material m_fieldSecondaryMaterial = null;
     [SerializeField] List<ActorSprite> m_enemyActorSpriteList = new List<ActorSprite>();
@@ -58,7 +62,6 @@ public class BattleManager : MonoBehaviour
     [SerializeField, Tooltip( "The maximum field effect (+/-) per element" )]
     private int m_fieldEffectMax = 3;
 
-
     [Header( "Weakness/Resistance" )]
     [SerializeField] private float m_resistMultiplier = 0.75f;
     [SerializeField] private float m_weaknessMultiplier = 1.5f;
@@ -76,7 +79,6 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI m_outputDisplay = null;
     [SerializeField] private int m_outputMaxLines = 10;
     [SerializeField] private TextMeshProUGUI m_statsDisplay = null;
-    [SerializeField] private TextMeshProUGUI m_turnOrderDisplay = null;
 
     private Actor m_activeActor = null;
     private int m_airEarthSpectrum = 0;
@@ -220,13 +222,6 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
-        m_isRunning = true;
-
-        ReviseTurnOrder();
-        Next();
-
-        Output( $"Start {m_playerList.Count} vs {m_enemyList.Count}, {m_activeActor} first" );
-
         for( var i = 0; i < m_playerList.Count; ++i ) {
             if ( i >= m_playerActorSpriteList.Count ) break;
             m_playerActorSpriteList[i].Sprite = m_playerList[i].Sprite;
@@ -236,6 +231,13 @@ public class BattleManager : MonoBehaviour
             if ( i >= m_enemyActorSpriteList.Count ) break;
             m_enemyActorSpriteList[i].Sprite = m_enemyList[i].Sprite;
         }
+
+        m_isRunning = true;
+
+        ReviseTurnOrder();
+        Next();
+
+        Output( $"Start {m_playerList.Count} vs {m_enemyList.Count}, {m_activeActor} first" );
     }
 
     private void ApplyElement( Element a_element, int a_power = 1 ) {
@@ -295,6 +297,7 @@ public class BattleManager : MonoBehaviour
         } while ( m_activeActor.IsDead );
 
         m_activeActor.ActorSprite.IsSelected = true;
+        m_activeActorDisplay.sprite = m_activeActor.Sprite;
 
         ReviseTurnOrder();
 
@@ -405,6 +408,18 @@ public class BattleManager : MonoBehaviour
                 Debug.LogError( "Infinite loop detected in determining turn order" );
                 return;
             }
+        }
+
+        // TODO reimplement showing turn numbers for debug
+        // TODO optimization: create lookahead number of images then set them
+        // TODO show active player larger
+        foreach ( Transform child in m_turnOrderDisplayParent.transform )
+            Destroy( child.gameObject );
+        foreach ( var turnData in m_turnOrderList ) {
+            var imageObj = new GameObject();
+            var image = imageObj.AddComponent<Image>();
+            image.sprite = turnData.actor.ActorSprite.Sprite;
+            imageObj.transform.SetParent( m_turnOrderDisplayParent.transform, false );
         }
     }
 
@@ -547,28 +562,14 @@ public class BattleManager : MonoBehaviour
             statsStr += $"Water: {m_fireWaterSpectrum}\n";
 
         foreach ( var actor in m_playerList ) {
-            statsStr += $"<color=white>{actor.Stats}</color>";
-            if ( actor == m_activeActor ) statsStr += " <=";
-            statsStr += "\n\n";
+            if ( actor == m_activeActor ) statsStr += "=> ";
+            statsStr += $"<color=white>{actor.Stats}</color>\n\n";
         }
         foreach ( var actor in m_enemyList ) {
-            statsStr += $"<color=red>{actor.Stats}</color>";
-            if ( actor == m_activeActor ) statsStr += " <=";
-            statsStr += "\n\n";
+            if ( actor == m_activeActor ) statsStr += "=> ";
+            statsStr += $"<color=red>{actor.Stats}</color>\n\n";
         }
         m_statsDisplay.text = statsStr;
-
-        var startColor = m_playerList.Contains( m_activeActor ) ? "green" : "red";
-        var turnOrderStr = "";
-        if ( m_showTurnNumbers )
-            turnOrderStr += $"[{m_currentTurn}] ";
-        turnOrderStr += $"<color={startColor}>{m_activeActor}</color>\n";
-        foreach ( var turnData in m_turnOrderList ) {
-            var color = m_playerList.Contains( turnData.actor ) ? "green" : "red";
-            if ( m_showTurnNumbers ) turnOrderStr += $"[{turnData.turnValue}] ";
-            turnOrderStr += $"<color={color}>{turnData.actor.name}</color> / ";
-        }
-        m_turnOrderDisplay.text = turnOrderStr.Substring( 0, turnOrderStr.Length - 2 );
     }
 
     private void UpdateTurnAi() {

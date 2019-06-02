@@ -16,9 +16,8 @@ public class ActorSprite : MonoBehaviour
     }
 
     public Sprite Sprite {
-        set {
-            GetComponent<SpriteRenderer>().sprite = value;
-        }
+        get { return GetComponent<SpriteRenderer>().sprite; }
+        set { GetComponent<SpriteRenderer>().sprite = value; }
     }
 
     private bool m_isSelected = false;
