@@ -37,6 +37,8 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private float m_aiTurnlengthSec = 0.5f;
 
     [Header( "Visual" )]
+    [SerializeField] private Material m_fieldPrimaryMaterial = null;
+    [SerializeField] private Material m_fieldSecondaryMaterial = null;
     [SerializeField] List<ActorSprite> m_enemyActorSpriteList = new List<ActorSprite>();
     [SerializeField] List<ActorSprite> m_playerActorSpriteList = new List<ActorSprite>();
 
@@ -530,23 +532,22 @@ public class BattleManager : MonoBehaviour
     private void UpdateHud() {
         if ( m_isRunning == false ) return;
 
-        var airEarthColor = "white";
-        if ( m_airEarthSpectrum <= -m_fieldEffectThreshold )
-            airEarthColor = ElementColor( Element.Air ).ToHexString();
-        else if ( m_airEarthSpectrum >= m_fieldEffectThreshold )
-            airEarthColor = ElementColor( Element.Earth ).ToHexString();
+        m_fieldPrimaryMaterial.color = ElementColor( FieldElementPrimary );
+        m_fieldSecondaryMaterial.color = ElementColor( FieldElementSecondary );
 
-        var fireWaterColor = "white";
-        if ( m_fireWaterSpectrum <= -m_fieldEffectThreshold )
-            fireWaterColor = ElementColor( Element.Fire ).ToHexString();
-        else if ( m_fireWaterSpectrum >= m_fieldEffectThreshold )
-            fireWaterColor = ElementColor( Element.Water ).ToHexString();
+        var statsStr = "";
+        if ( m_airEarthSpectrum < -m_fieldEffectThreshold )
+            statsStr += $"Air: {-m_airEarthSpectrum}\n";
+        else if( m_airEarthSpectrum > m_fieldEffectThreshold )
+            statsStr += $"Earth: {m_airEarthSpectrum}\n";
 
-        var statsStr = $"<color={airEarthColor}>Air << {m_airEarthSpectrum} >> Earth</color>\n" +
-            $"<color={fireWaterColor}>Fire << {m_fireWaterSpectrum} >> Water</color>\n\n" +
-            $"{m_playerChargePoints}/{m_chargePointsMax} CP\n\n";
+        if ( m_fireWaterSpectrum < -m_fieldEffectThreshold )
+            statsStr += $"Fire: {-m_fireWaterSpectrum}\n";
+        else if( m_fireWaterSpectrum > m_fieldEffectThreshold )
+            statsStr += $"Water: {m_fireWaterSpectrum}\n";
+
         foreach ( var actor in m_playerList ) {
-            statsStr += $"<color=green>{actor.Stats}</color>";
+            statsStr += $"<color=white>{actor.Stats}</color>";
             if ( actor == m_activeActor ) statsStr += " <=";
             statsStr += "\n\n";
         }
