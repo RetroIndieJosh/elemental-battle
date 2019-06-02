@@ -521,10 +521,10 @@ MonoBehaviour:
   - {fileID: 250580976}
   m_chargePointsPerAttack: 1
   m_chargePointsMax: 10
-  m_primaryFieldEffectMatchMult: 2
-  m_secondaryFieldEffectMatchMult: 2
+  m_primaryFieldEffectMatchMult: 0.5
+  m_secondaryFieldEffectMatchMult: 0.75
   m_primaryFieldEffectOpposeMult: 2
-  m_secondaryFieldEffectOpposeMult: 2
+  m_secondaryFieldEffectOpposeMult: 1.5
   m_fieldEffectThreshold: 2
   m_fieldEffectMax: 3
   m_resistMultiplier: 0.75

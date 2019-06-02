@@ -432,8 +432,7 @@ public class BattleManager : MonoBehaviour
     private void PlayerTopMenu() {
         if ( m_attackButton.wasPressedThisFrame || m_attackKey.wasPressedThisFrame ) {
             var target = m_enemyList.GetRandomElement();
-            if( TryAttack( target ) )
-                m_playerChargePoints += m_chargePointsPerAttack;
+            TryAttack( target );
             Next();
         } else if ( m_defendButton.wasPressedThisFrame || m_defendKey.wasPressedThisFrame ) {
             m_activeActor.Defend();

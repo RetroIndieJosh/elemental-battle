@@ -1,14 +1,16 @@
 - separate portrait from field sprite
 
-- player colorize:
-        attack
-        defend
-        cast
-        selected
+- player colorize defend
 - flash player status when hit
+
+- active actor highlight
+- target selection
 
 - generate attributes on build
 
 - BUG when sequence ends with players, goes beyond maximum
-- BUG CP cost for spells not honoring field effect?
-- BUG player stats don't update
+
+- split BattleManager into:
+        player control
+        enemy AI
+        visuals
