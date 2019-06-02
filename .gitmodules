@@ -1,6 +1,3 @@
 [submodule "Assets/unity-build-itch"]
 	path = Assets/unity-build-itch
 	url = git@github.com:MrJoshuaMcLean/unity-build-itch.git
-[submodule "Assets/InputSystem"]
-	path = Assets/InputSystem
-	url = git@github.com:Unity-Technologies/InputSystem.git
