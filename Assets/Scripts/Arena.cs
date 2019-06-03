@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using EditorGUITable;
 
 [System.Serializable]
 public class ArenaLevel
 {
     public string name = "Arena Level";
-    public string openMessage = "";
+    [TextArea] public string openMessage = "";
     public EncounterRegion encounterRegion = null;
 }
 
@@ -20,7 +21,7 @@ public class Arena : MonoBehaviour
 
     [SerializeField] private bool m_runOnStart = false;
     [SerializeField] private List<ArenaLevel> m_arenaLevelList = new List<ArenaLevel>();
-    [SerializeField] private List<ArenaPlayer> m_arenaPlayerList = new List<ArenaPlayer>();
+    [SerializeField, Table] private List<ArenaPlayer> m_arenaPlayerList = new List<ArenaPlayer>();
 
     private ArenaLevel CurrentLevel {  get { return m_arenaLevelList[m_arenaLevelIndex]; } }
 

@@ -85,7 +85,6 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private float m_weaknessMultiplier = 1.5f;
 
     [Header( "Debug" )]
-    [SerializeField] private bool m_enterBattleOnStart = false;
     [SerializeField] private bool m_showTurnNumbers = false;
 
     [Header( "Game State" )]
@@ -280,7 +279,7 @@ public class BattleManager : MonoBehaviour
         ReviseTurnOrder();
         Next();
 
-        UpdatePlayerDisplay();
+        UpdateHud();
     }
 
     public void StartBattle() {
@@ -640,8 +639,6 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
-        UpdatePlayerDisplay();
-
         // wait for animation before switching actor
         if ( m_activeActor == null ) StartTurn();
         else if ( m_nextActor != null ) {
@@ -666,6 +663,8 @@ public class BattleManager : MonoBehaviour
 
     private void UpdateHud() {
         if ( m_isRunning == false ) return;
+
+        UpdatePlayerDisplay();
 
         m_fieldPrimaryMaterial.color = ElementColor( FieldElementPrimary );
         m_fieldSecondaryMaterial.color = ElementColor( FieldElementSecondary );

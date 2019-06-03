@@ -37,7 +37,6 @@ public class ActorSprite : MonoBehaviour
 
     private bool m_isSelected = false;
     private Vector3 m_startPos = Vector3.zero;
-    private float m_selectedTime = 0f;
 
     public void AnimateAttack( Vector3 a_targetPos ) {
         StartCoroutine( AnimateAttackCoroutine( a_targetPos ) );
