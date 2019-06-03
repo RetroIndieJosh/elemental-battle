@@ -4,61 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-[System.Serializable]
-public class EnemyEntry
-{
-    [SerializeField] private ActorDef m_enemyDef = null;
-    [SerializeField] private int m_level = 1;
-    [SerializeField] private int m_count = 1;
-
-    public List<Actor> EnemyList {
-        get {
-            var enemyList = new List<Actor>();
-            for ( var i = 0; i < m_count; ++i ) {
-                var obj = new GameObject();
-                var actor = obj.AddComponent<Actor>();
-                actor.Set( m_enemyDef, m_level );
-                enemyList.Add( actor );
-            }
-            return enemyList;
-        }
-    }
-}
-
-[CreateAssetMenu(fileName = "New Encounter", menuName = "Encounter", order = 1)]
-public class Encounter: ScriptableObject
-{
-    [SerializeField] private List<EnemyEntry> m_enemyEntryList = new List<EnemyEntry>();
-
-    public List<Actor> EnemyList {
-        get {
-            var enemyList = new List<Actor>();
-            foreach ( var entry in m_enemyEntryList )
-                enemyList.AddRange( entry.EnemyList );
-            return enemyList;
-        }
-    }
-}
-
-[CreateAssetMenu(fileName = "New Encounter Region", menuName = "Encounter Region", order = 1)]
-public class EncounterRegion: ScriptableObject
-{
-    [SerializeField] List<Encounter> m_enemyPartyList = new List<Encounter>();
-
-    public List<Actor> GenerateEncounter() {
-        var roll = Random.Range( 0, m_enemyPartyList.Count );
-        return m_enemyPartyList[roll].EnemyList;
-    }
-}
-
-[System.Serializable]
-public class ArenaPlayer
-{
-    public string Name {  get { return player == null ? "Unset" : player.name; } }
-    public Actor player = null;
-    public int firstLevel = 0;
-}
-
 public class Arena : MonoBehaviour
 {
     [SerializeField] private float m_transitionFadeTimeSec = 2f;

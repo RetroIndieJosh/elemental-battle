@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+
+using UnityEngine;
 using UnityEditor;
 
 [CustomEditor( typeof( ActorDef ) )]
@@ -25,3 +27,6 @@ public class ActorDefEditor : Editor
         serializedObject.ApplyModifiedProperties();
     }
 }
+
+#endif // UNITY_EDITOR
+

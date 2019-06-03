@@ -2710,9 +2710,9 @@ MonoBehaviour:
   m_battleStartMessageList:
   - <color=blue>Curtis</color> vs Skeletons
   - <color=red>Jack</color> brings the fire
-  - A <color=yellow>gust</color> brings Karen into the fray
+  - A gust brings <color=yellow>Karen</color> into the fray
   - <color=green>Mia</color> grounds the party
-  - <color=gray>Will</color> is the final hero
+  - Will is the final hero
   - Now you're on your own...
 --- !u!4 &1844457403
 Transform:
