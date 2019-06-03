@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_cost: 2
   m_elementPower: 1
-  m_damage: 3
+  m_damage: 4
   m_nameAir: 
   m_nameEarth: 
   m_nameFire: 

@@ -11,9 +11,7 @@ public class ActorSprite : MonoBehaviour
     public bool IsSelected {
         set {
             m_isSelected = value;
-            if ( m_isSelected )
-                m_startPos = transform.position;
-            else transform.position = m_startPos;
+            transform.rotation = Quaternion.identity;
         }
     }
 
@@ -112,17 +110,12 @@ public class ActorSprite : MonoBehaviour
         spriteRenderer.color = Color.white;
     }
 
-    void Update() {
-        if( m_isSelected ) {
-            m_selectedTime += Time.deltaTime;
-            var t = 0f;
-            if ( m_selectedTime < 1f )
-                t = m_selectedTime;
-            else t = 1f - ( m_selectedTime - 1f );
-            transform.position = Vector3.Lerp( m_startPos, m_startPos + Vector3.up, t );
+    private void Start() {
+        m_startPos = transform.position;
+    }
 
-            if ( m_selectedTime >= 2f )
-                m_selectedTime = 0f;
-        }
+    void Update() {
+        if( m_isSelected )
+            transform.Rotate( Vector3.up, -500f * Time.deltaTime );
     }
 }

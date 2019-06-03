@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 using TMPro;
 using System.Linq;
+using System.Collections;
 
 [DisallowMultipleComponent]
 public class BattleManager : MonoBehaviour
@@ -97,6 +99,8 @@ public class BattleManager : MonoBehaviour
 
     public float AttackMoveTime {  get { return m_attackMoveTime; } }
     public float AttackStayTime {  get { return m_attackStayTime; } }
+
+    public UnityEvent OnFinish = new UnityEvent();
 
     private Image[] m_playerPortraitImage = null;
     private TextMeshProUGUI[] m_playerPortraitTextMesh = null;
@@ -230,9 +234,18 @@ public class BattleManager : MonoBehaviour
     public void Clear() {
         m_enemyList.Clear();
         m_playerList.Clear();
+
+        foreach ( Transform child in m_statusPortraitsParent.transform )
+            Destroy( child.gameObject );
+
+        foreach ( Transform child in m_turnOrderDisplayParent.transform )
+            Destroy( child.gameObject );
     }
 
-    public void StartBattle() {
+    public void LoadBattle() {
+        m_gameOver.SetActive( false );
+        m_win.SetActive( false );
+
         if ( m_enemyList.Count == 0 ) {
             Debug.LogWarning( "[BattleManager] Tried to start battle but no enemies set; ignoring." );
             return;
@@ -264,10 +277,14 @@ public class BattleManager : MonoBehaviour
             m_enemyActorSpriteList[i].Sprite = m_enemyList[i].FieldSprite;
         }
 
-        m_isRunning = true;
-
         ReviseTurnOrder();
         Next();
+
+        UpdatePlayerDisplay();
+    }
+
+    public void StartBattle() {
+        m_isRunning = true;
 
         Output( $"Start {m_playerList.Count} vs {m_enemyList.Count}, {m_activeActor} first" );
     }
@@ -366,8 +383,6 @@ public class BattleManager : MonoBehaviour
     private Actor m_nextActor = null;
 
     private void Next() {
-        if ( m_isRunning == false ) return;
-
         RemoveDeadEnemies();
 
         if ( m_activeActor != null )
@@ -592,27 +607,23 @@ public class BattleManager : MonoBehaviour
         m_castKey[3] = Keyboard.current.bKey;
     }
 
-    private void Update() {
-        if ( m_isRunning == false ) {
-            if ( m_enterBattleOnStart == false ) return;
-
-            // do this here so all Start()s have run
-            var actorList = FindObjectsOfType<Actor>();
-            if ( actorList.Count( a => a.name.Contains( "Enemy" ) && a.IsDead == false ) == 0 ) return;
-            if ( actorList.Count( a => a.name.Contains( "Player" ) && a.IsDead == false ) == 0 ) return;
-            foreach ( var actor in actorList ) {
-                if ( actor.name.Contains( "Player" ) )
-                    AddPlayer( actor );
-                else
-                    AddEnemy( actor );
-            }
-            StartBattle();
-            return;
+    private void UpdatePlayerDisplay() {
+        for ( var i = 0; i < m_playerList.Count; ++i ) {
+            m_playerPortraitImage[i].sprite = m_playerList[i].PortraitSprite;
+            m_playerPortraitTextMesh[i].text = m_playerList[i].Stats;
         }
+    }
+
+    private void Update() {
+        if ( m_activeActorDisplay.sprite == null ) m_activeActorDisplay.color = Color.clear;
+        else m_activeActorDisplay.color = Color.white;
+
+        if ( m_isRunning == false ) return;
 
         if ( m_enemyList.Count == 0 ) {
             m_win.SetActive( true );
             m_isRunning = false;
+            OnFinish.Invoke();
             return;
         }
 
@@ -629,11 +640,7 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
-        // update player display
-        for ( var i = 0; i < m_playerList.Count; ++i ) {
-            m_playerPortraitImage[i].sprite = m_playerList[i].PortraitSprite;
-            m_playerPortraitTextMesh[i].text = m_playerList[i].Stats;
-        }
+        UpdatePlayerDisplay();
 
         // wait for animation before switching actor
         if ( m_activeActor == null ) StartTurn();
@@ -688,7 +695,7 @@ public class BattleManager : MonoBehaviour
     }
 
     private bool TryAttack( Actor a_target ) {
-        return TryAttack( a_target, Color.yellow );
+        return TryAttack( a_target, Color.black );
     }
 
     private bool TryAttack( Actor a_target, Color a_flashColor ) {
@@ -720,8 +727,51 @@ public class BattleManager : MonoBehaviour
     }
 }
 
-static public class ListExt
+static public class AlakajamExtensions
 {
+    // Graphic
+
+    public static IEnumerator FadeInCoroutine( this Graphic a_image, float a_fadeInTime ) {
+        return FadeCoroutineHandler( a_image, a_fadeInTime, true );
+    }
+
+    public static IEnumerator FadeOutCoroutine( this Graphic a_image, float a_fadeOutTime ) {
+        return FadeCoroutineHandler( a_image, a_fadeOutTime, false );
+    }
+
+    public static IEnumerator FadeInOutCoroutine( this Graphic a_image, float a_fadeInTime, float a_fadeOutTime = 0f ) {
+        if ( a_fadeOutTime <= 0f ) a_fadeOutTime = a_fadeInTime;
+
+        yield return FadeCoroutineHandler( a_image, a_fadeOutTime, true );
+        //yield return new WaitForSeconds( a_fadeOutTime );
+
+        yield return FadeCoroutineHandler( a_image, a_fadeInTime, false );
+        //yield return new WaitForSeconds( a_fadeInTime );
+    }
+
+    public static IEnumerator FadeOutInCoroutine( this Graphic a_image, float a_fadeOutTime, float a_fadeInTime = 0f ) {
+        if ( a_fadeInTime <= 0f ) a_fadeInTime = a_fadeOutTime;
+
+        FadeCoroutineHandler( a_image, a_fadeOutTime, true );
+        yield return new WaitForSeconds( a_fadeOutTime );
+
+        FadeCoroutineHandler( a_image, a_fadeInTime, false );
+        yield return new WaitForSeconds( a_fadeInTime );
+    }
+
+    public static IEnumerator FadeCoroutineHandler( this Graphic a_graphic, float a_fadeTime, bool a_fadeIn ) {
+        var timeElapsed = 0f;
+        while ( timeElapsed < a_fadeTime ) {
+            timeElapsed += Time.deltaTime;
+            var t = timeElapsed / a_fadeTime;
+            if ( a_fadeIn ) a_graphic.color = Color.Lerp( Color.clear, Color.black, t );
+            else a_graphic.color = Color.Lerp( Color.black, Color.clear, t );
+            yield return null;
+        }
+    }
+
+    // Color
+
     public static string ToHexString( this Color c ) {
         var r = Mathf.FloorToInt( c.r * 255 );
         var g = Mathf.FloorToInt( c.g * 255 );
@@ -729,17 +779,11 @@ static public class ListExt
         return $"#{r:X2}{g:X2}{b:X2}";
     }
 
+    // List<T>
+
     public static T GetRandomElement<T>( this List<T> a_list ) {
         var roll = Random.Range( 0, a_list.Count );
         return a_list[roll];
-    }
-
-    public static string ToString( this List<MonoBehaviour> a_list, string a_delimiter, string a_endDelimiter = null ) {
-        var strList = new List<string>();
-        foreach ( var o in a_list )
-            strList.Add( o.name );
-
-        return strList.ToString();
     }
 
     public static string ToString<T>( this List<T> a_list, string a_delimiter, string a_endDelimiter = null ) {
@@ -751,6 +795,16 @@ static public class ListExt
         if ( a_endDelimiter != null )
             listStr += a_endDelimiter;
         return listStr;
+    }
+
+    // List<MonoBehaviour>
+
+    public static string ToString( this List<MonoBehaviour> a_list, string a_delimiter, string a_endDelimiter = null ) {
+        var strList = new List<string>();
+        foreach ( var o in a_list )
+            strList.Add( o.name );
+
+        return strList.ToString();
     }
 }
 

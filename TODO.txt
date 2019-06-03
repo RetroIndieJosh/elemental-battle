@@ -1,5 +1,4 @@
-- player colorize defend
-- flash player status when hit
+- between encounters: heal players, clear CP
 
 - active actor highlight
 - target selection

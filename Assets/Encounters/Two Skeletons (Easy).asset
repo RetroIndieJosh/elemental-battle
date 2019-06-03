@@ -9,13 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a797d1526d7b2648b16b32dcb180300, type: 3}
-  m_Name: Poke
-  m_EditorClassIdentifier: 
-  m_cost: 1
-  m_elementPower: 1
-  m_damage: 2
-  m_nameAir: 
-  m_nameEarth: 
-  m_nameFire: 
-  m_nameWater: 
+  m_Script: {fileID: 0}
+  m_Name: Two Skeletons (Easy)
+  m_EditorClassIdentifier: Assembly-CSharp::Encounter
+  m_enemyEntryList:
+  - m_enemyDef: {fileID: 11400000, guid: 9b13a5059d697014398a11714694335a, type: 2}
+    m_level: 1
+    m_count: 2

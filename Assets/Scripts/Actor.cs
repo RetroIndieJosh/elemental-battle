@@ -23,7 +23,7 @@ public class Actor : MonoBehaviour
             else if ( healthPercent < 0.4f ) healthColor = Color.yellow;
 
             var healthColorStr = healthColor.ToHexString();
-            var stats = $"{name} {Element.ToString()[0]}\n" +
+            var stats = $"{name} ({Element.ToString()[0]})\n" +
                 $"<color={healthColorStr}>{m_hitPoints}</color>/{HitPointsMax} HP";
 
             if ( m_isDefending ) stats += " (defending)";
@@ -33,7 +33,7 @@ public class Actor : MonoBehaviour
 
     public Spell[] Spells {  get { return SpellList.ToArray(); } }
 
-    public ActorSprite ActorSprite = null;
+    [HideInInspector] public ActorSprite ActorSprite = null;
 
     private int Strength { get { return m_attributes.Strength; } }
     private int HitPointsMax { get { return m_attributes.HitPointsMax; } }
@@ -64,6 +64,12 @@ public class Actor : MonoBehaviour
         ActorSprite.transform.localScale = new Vector3( -1f, 1f );
     }
 
+    public void Set(ActorDef a_def, int a_level, bool a_resetHitPoints = true ) {
+        m_actorDef = a_def;
+        m_attributes = m_actorDef.GetAttributesForLevel( a_level );
+        if ( a_resetHitPoints ) m_hitPoints = HitPointsMax;
+    }
+
     public void StartTurn() {
         m_isDefending = false;
         ActorSprite.transform.localScale = Vector3.one;
@@ -83,7 +89,7 @@ public class Actor : MonoBehaviour
             Destroy( this );
             return;
         }
-        m_attributes = new ActorAttributes( m_actorDef.GetAttributesForLevel( m_startLevel ) );
-        m_hitPoints = HitPointsMax;
+
+        Set( m_actorDef, m_startLevel );
     }
 }
