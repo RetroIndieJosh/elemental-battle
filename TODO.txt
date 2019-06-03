@@ -1,7 +1,4 @@
 CRITICAL
-- [game] Title screen with credit (click name for pronounce)
-- [game] Asset credits
-- [game] Back button/key on top menu to show help info
 - [game] Show battle victory screen after battle (delay to next)
 
 YES

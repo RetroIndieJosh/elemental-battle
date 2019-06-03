@@ -39,6 +39,7 @@ public class BattleManager : MonoBehaviour
 
     [SerializeField] private int m_speedMax = 1000;
     [SerializeField] private int m_turnOrderLookAhead = 5;
+    [SerializeField] private GameObject m_help = null;
 
     [Header( "Sound Effects" )]
     [SerializeField] private AudioMixerGroup m_soundMixerGroup = null;
@@ -512,6 +513,8 @@ public class BattleManager : MonoBehaviour
 
             CurPlayerMenuState = PlayerMenuState.SpellMenu;
         }
+
+        m_help.SetActive( m_backButton.isPressed || m_backKey.isPressed );
     }
 
     // TODO set player back to white color when revived
@@ -564,10 +567,10 @@ public class BattleManager : MonoBehaviour
             Destroy( child.gameObject );
         var turnOrderListClamped = m_turnOrderList.Take( m_turnOrderLookAhead );
         foreach ( var turnData in turnOrderListClamped ) {
-            var imageObj = new GameObject();
-            var image = imageObj.AddComponent<Image>();
+            var o = new GameObject();
+            var image = o.AddComponent<Image>();
             image.sprite = turnData.actor.PortraitSprite;
-            imageObj.transform.SetParent( m_turnOrderDisplayParent.transform, false );
+            o.transform.SetParent( m_turnOrderDisplayParent.transform, false );
         }
     }
 
@@ -596,6 +599,9 @@ public class BattleManager : MonoBehaviour
 
         m_menuEntryTextMesh[2].text = $"{m_spellKey.displayName} Spells";
         m_menuEntryImage[2].sprite = UiManager.instance.GetSpriteFor( m_spellButton );
+
+        m_menuEntryTextMesh[3].text = $"{m_backKey.displayName} Help";
+        m_menuEntryImage[3].sprite = UiManager.instance.GetSpriteFor( m_backButton );
 
         m_menuHeaderTextMesh.text = $"{m_activeActor.name}";
     }
