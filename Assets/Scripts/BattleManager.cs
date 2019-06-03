@@ -103,7 +103,9 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private GameObject m_win = null;
 
     [Header( "UI" )]
-    [SerializeField] private TextMeshProUGUI m_menuDisplay = null;
+    [SerializeField] private TextMeshProUGUI m_menuHeaderTextMesh = null;
+    [SerializeField] private GameObject m_menuEntryPrefab = null;
+    [SerializeField] private GameObject m_menuParent = null;
     [SerializeField] private TextMeshProUGUI m_outputDisplay = null;
     [SerializeField] private int m_outputMaxLines = 10;
 
@@ -114,6 +116,9 @@ public class BattleManager : MonoBehaviour
 
     private Image[] m_playerPortraitImage = null;
     private TextMeshProUGUI[] m_playerPortraitTextMesh = null;
+
+    private Image[] m_menuEntryImage = null;
+    private TextMeshProUGUI[] m_menuEntryTextMesh = null;
 
     private Actor m_activeActor = null;
     private int m_airEarthSpectrum = 0;
@@ -280,6 +285,15 @@ public class BattleManager : MonoBehaviour
             m_playerPortraitImage[i] = statusPortrait.GetComponentInChildren<Image>();
             m_playerPortraitTextMesh[i] = statusPortrait.GetComponentInChildren<TextMeshProUGUI>();
             statusPortrait.transform.SetParent( m_statusPortraitsParent.transform, false );
+        }
+
+        m_menuEntryImage = new Image[5];
+        m_menuEntryTextMesh = new TextMeshProUGUI[5];
+        for( var i = 0; i < 5; ++i ) {
+            var menuEntry = Instantiate( m_menuEntryPrefab );
+            m_menuEntryImage[i] = menuEntry.GetComponentInChildren<Image>();
+            m_menuEntryTextMesh[i] = menuEntry.GetComponentInChildren<TextMeshProUGUI>();
+            menuEntry.transform.SetParent( m_menuParent.transform, false );
         }
 
         for ( var i = 0; i < m_enemyList.Count; ++i ) {
@@ -558,26 +572,32 @@ public class BattleManager : MonoBehaviour
     }
 
     private void ShowControlsSpellMenu() {
-        var controlStr = "";
         for ( var i = 0; i < m_activeActor.Spells.Length; ++i ) {
             var spell = m_activeActor.Spells[i];
             var color = CanCastSpell( i ) ? "green" : "red";
             var spellName = spell.GetNameForElement( m_activeActor.Element );
             var cost = SpellCost( i );
-            var input = $"{m_castKey[i].displayName} ({m_castButton[i].displayName})";
-            controlStr += $"{input} <color={color}>{spellName}: {cost} CP</color>\n";
+            var keyboardInput = $"{m_castKey[i].displayName}";
+            m_menuEntryTextMesh[i].text = $"{keyboardInput} <color={color}>{spellName}: {cost} CP</color>\n";
+            m_menuEntryImage[i].sprite = UiManager.instance.GetSpriteFor( m_castButton[i] );
         }
 
-        m_menuDisplay.text = $"{m_activeActor.name} Spells\n\n" + controlStr
-            + $"\n{m_backKey.displayName} ({m_backButton.displayName}) Back";
+        m_menuHeaderTextMesh.text = $"{m_activeActor.name} Spells";
+        m_menuEntryImage[m_activeActor.Spells.Length].sprite = UiManager.instance.GetSpriteFor( Gamepad.current.leftShoulder );
+        m_menuEntryTextMesh[m_activeActor.Spells.Length].text = $"\n{m_backKey.displayName} Back";
     }
 
     private void ShowControlsTopMenu() {
-        var attackInputStr = $"{m_attackKey.displayName} ({m_attackButton.displayName}) Attack";
-        var defendInputStr = $"{m_defendKey.displayName} ({m_defendButton.displayName}) Defend";
-        var spellInputStr = $"{m_spellKey.displayName} ({m_spellButton.displayName}) Spells";
+        m_menuEntryTextMesh[0].text = $"{m_attackKey.displayName} Attack";
+        m_menuEntryImage[0].sprite = UiManager.instance.GetSpriteFor( m_attackButton );
 
-        m_menuDisplay.text = $"{m_activeActor.name}\n\n{attackInputStr}\n{defendInputStr}\n{spellInputStr}";
+        m_menuEntryTextMesh[1].text = $"{m_defendKey.displayName} Defend";
+        m_menuEntryImage[1].sprite = UiManager.instance.GetSpriteFor( m_defendButton );
+
+        m_menuEntryTextMesh[2].text = $"{m_spellKey.displayName} Spells";
+        m_menuEntryImage[2].sprite = UiManager.instance.GetSpriteFor( m_spellButton );
+
+        m_menuHeaderTextMesh.text = $"{m_activeActor.name}";
     }
 
     private int SpellCost( int a_spellIndex ) {
@@ -707,7 +727,12 @@ public class BattleManager : MonoBehaviour
         else if ( m_fireWaterSpectrum > m_fieldEffectThreshold )
             statsStr += $"Water: {m_fireWaterSpectrum}\n";
 
-        // TODO display field effect
+        // hide unused menu slots
+        foreach ( var menuEntry in m_menuEntryImage ) {
+            if ( menuEntry.sprite == null )
+                menuEntry.color = Color.clear;
+            else menuEntry.color = Color.white;
+        }
     }
 
     private void UpdateTurnAi() {

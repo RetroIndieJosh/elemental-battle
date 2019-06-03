@@ -42,6 +42,16 @@ public class ActorAdvancementDef : ScriptableObject
     [SerializeField] Advancement m_hitPointsAdvancement = new Advancement();
     [SerializeField] Advancement m_speedAdvancement = new Advancement();
 
+    public ActorStats GetStatsForLevel( int a_level ) {
+        var stats = new ActorStats {
+            attack = GetAttackForLevel( a_level ),
+            hitPointsMax = GetHitPointsForLevel( a_level ),
+            speed = GetSpeedForLevel( a_level )
+        };
+
+        return stats;
+    }
+
     public int GetAttackForLevel( int a_level ) {
         return m_attackAdvancement.GetValueForLevel( a_level );
     }

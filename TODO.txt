@@ -1,6 +1,4 @@
 - [!BUG] field color doesn't reset at beginning of game, even though it should with the first call to BattleManager.UpdateHud()
-- [ActorAdvancementDef] increment & modify inc
-- [ActorAdvancementDef] percent (1f = 100%) vs value (int)
 - [ActorAdvancementDef] rounding methods (floor, avg, ceil)
 - [ActorDef] generate sample (show levels)
 - [ActorDef] hit/hurt sfx

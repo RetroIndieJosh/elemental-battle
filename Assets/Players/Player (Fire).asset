@@ -12,22 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8c68db1565f15d458eb7624776007c3, type: 3}
   m_Name: Player (Fire)
   m_EditorClassIdentifier: 
-  m_element: 2
-  m_baseAttributes:
-    name: 
-    spellList:
-    - {fileID: 11400000, guid: 32ab4d1c3a4cace48bad0d928ae85aec, type: 2}
-    - {fileID: 11400000, guid: 9421f20abbb1c9548acfe900b5b562e4, type: 2}
-    - {fileID: 11400000, guid: d9b1f2bedce17114fb8024c06f353151, type: 2}
-    m_hitPointsMax: 10
-    m_speed: 10
-    m_strength: 1
   m_fieldSprite: {fileID: 21300000, guid: f6fe0ffaa4d735849ab485e924b5bce2, type: 3}
   m_portraitSprite: {fileID: 21300000, guid: a92594c7e3e39e14f84dfbf0abc5fd1c, type: 3}
-  m_strengthIncPerLevel: 1
-  m_hitPointsIncPerLevel: 0
-  m_speedIncPerLevel: 3
+  m_advancementDef: {fileID: 11400000, guid: 67125ff4d2032be45bd4c50cbc6d7373, type: 2}
   m_levelCap: 5
+  m_element: 2
   m_spellList:
   - spell: {fileID: 11400000, guid: 32ab4d1c3a4cace48bad0d928ae85aec, type: 2}
     level: 3
@@ -35,47 +24,3 @@ MonoBehaviour:
     level: 7
   - spell: {fileID: 11400000, guid: d9b1f2bedce17114fb8024c06f353151, type: 2}
     level: 12
-  m_attributeLevelList:
-  - name: Level 1
-    spellList:
-    - {fileID: 11400000, guid: 32ab4d1c3a4cace48bad0d928ae85aec, type: 2}
-    - {fileID: 11400000, guid: 9421f20abbb1c9548acfe900b5b562e4, type: 2}
-    - {fileID: 11400000, guid: d9b1f2bedce17114fb8024c06f353151, type: 2}
-    m_hitPointsMax: 10
-    m_speed: 13
-    m_strength: 2
-  - name: Level 2
-    spellList:
-    - {fileID: 11400000, guid: 32ab4d1c3a4cace48bad0d928ae85aec, type: 2}
-    - {fileID: 11400000, guid: 9421f20abbb1c9548acfe900b5b562e4, type: 2}
-    - {fileID: 11400000, guid: d9b1f2bedce17114fb8024c06f353151, type: 2}
-    m_hitPointsMax: 10
-    m_speed: 16
-    m_strength: 3
-  - name: Level 3
-    spellList:
-    - {fileID: 11400000, guid: 32ab4d1c3a4cace48bad0d928ae85aec, type: 2}
-    - {fileID: 11400000, guid: 9421f20abbb1c9548acfe900b5b562e4, type: 2}
-    - {fileID: 11400000, guid: d9b1f2bedce17114fb8024c06f353151, type: 2}
-    - {fileID: 11400000, guid: 32ab4d1c3a4cace48bad0d928ae85aec, type: 2}
-    m_hitPointsMax: 10
-    m_speed: 19
-    m_strength: 4
-  - name: Level 4
-    spellList:
-    - {fileID: 11400000, guid: 32ab4d1c3a4cace48bad0d928ae85aec, type: 2}
-    - {fileID: 11400000, guid: 9421f20abbb1c9548acfe900b5b562e4, type: 2}
-    - {fileID: 11400000, guid: d9b1f2bedce17114fb8024c06f353151, type: 2}
-    - {fileID: 11400000, guid: 32ab4d1c3a4cace48bad0d928ae85aec, type: 2}
-    m_hitPointsMax: 10
-    m_speed: 22
-    m_strength: 5
-  - name: Level 5
-    spellList:
-    - {fileID: 11400000, guid: 32ab4d1c3a4cace48bad0d928ae85aec, type: 2}
-    - {fileID: 11400000, guid: 9421f20abbb1c9548acfe900b5b562e4, type: 2}
-    - {fileID: 11400000, guid: d9b1f2bedce17114fb8024c06f353151, type: 2}
-    - {fileID: 11400000, guid: 32ab4d1c3a4cace48bad0d928ae85aec, type: 2}
-    m_hitPointsMax: 10
-    m_speed: 25
-    m_strength: 6

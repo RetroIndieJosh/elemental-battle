@@ -12,11 +12,9 @@ public class ActorDefEditor : Editor
 
         DrawDefaultInspector();
 
-        GUILayout.Label( "WARNING: Overwrites all Level Tweaking!", EditorStyles.boldLabel );
-        if( GUILayout.Button("Generate Attributes" ) ) {
-            foreach( ActorDef actorDef in targets )
-                actorDef.GenerateAttributeLevelList();
-        }
+        var actorAdvancementDef = serializedObject.FindProperty( "m_advancementDef" ).objectReferenceValue as ActorAdvancementDef;
+        var levelCap = serializedObject.FindProperty( "m_levelCap" ).intValue;
+        ActorAdvancementDefEditor.ShowAdvancementTable( actorAdvancementDef, levelCap );
 
         serializedObject.ApplyModifiedProperties();
     }
