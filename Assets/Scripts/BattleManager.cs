@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine.Audio;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -38,6 +39,16 @@ public class BattleManager : MonoBehaviour
 
     [SerializeField] private int m_speedMax = 1000;
     [SerializeField] private int m_turnOrderLookAhead = 5;
+
+    [Header( "Sound Effects" )]
+    [SerializeField] private AudioMixerGroup m_soundMixerGroup = null;
+    [SerializeField] private AudioClip m_hitSound = null;
+    [SerializeField] private AudioClip m_hurtSound = null;
+    [SerializeField] private AudioClip m_castSound = null;
+    [SerializeField] private AudioClip m_deathSound = null;
+    [SerializeField] private AudioClip m_menuSound = null;
+    [SerializeField] private AudioClip m_victorySound = null;
+    [SerializeField] private AudioClip m_gameOverSound = null;
 
     [Header( "Animation" )]
     [SerializeField] private float m_attackMoveTime = 0.4f;
@@ -381,6 +392,16 @@ public class BattleManager : MonoBehaviour
 
     private Actor m_nextActor = null;
 
+    private void PlaySound(AudioClip a_sound ) {
+        if ( a_sound == null ) return;
+        var source = gameObject.AddComponent<AudioSource>();
+        source.outputAudioMixerGroup = m_soundMixerGroup;
+        source.clip = a_sound;
+        source.Play();
+
+        Destroy( source, a_sound.length );
+    }
+
     private void Next() {
         RemoveDeadEnemies();
 
@@ -426,7 +447,7 @@ public class BattleManager : MonoBehaviour
     private void CastSpell( int a_spellIndex, Actor a_target ) {
         var color = ElementColor( m_activeActor.Element );
         m_activeActor.ActorSprite.Color = color;
-        if ( TryAttack( a_target, color ) == false ) return;
+        if ( TryAttack( a_target, color, true ) == false ) return;
 
         ApplyElement( m_activeActor.Element, m_activeActor.Spells[a_spellIndex].ElementPower );
         if ( IsEnemy( m_activeActor ) ) m_enemyChargePoints -= SpellCost( a_spellIndex );
@@ -442,6 +463,7 @@ public class BattleManager : MonoBehaviour
         var spells = m_activeActor.Spells;
         for ( var i = 0; i < spells.Length; ++i ) {
             if ( m_castButton[i].wasPressedThisFrame || m_castKey[i].wasPressedThisFrame ) {
+                PlaySound( m_menuSound );
                 if ( CanCastSpell( i ) ) {
                     var target = m_enemyList.GetRandomElement();
                     CastSpell( i, target );
@@ -458,14 +480,17 @@ public class BattleManager : MonoBehaviour
 
     private void PlayerTopMenu() {
         if ( m_attackButton.wasPressedThisFrame || m_attackKey.wasPressedThisFrame ) {
+            PlaySound( m_menuSound );
             var target = m_enemyList.GetRandomElement();
             TryAttack( target );
             Next();
         } else if ( m_defendButton.wasPressedThisFrame || m_defendKey.wasPressedThisFrame ) {
+            PlaySound( m_menuSound );
             m_activeActor.Defend();
             Output( $"{m_activeActor} is now defending" );
             Next();
         } else if ( m_spellButton.wasPressedThisFrame || m_spellKey.wasPressedThisFrame ) {
+            PlaySound( m_menuSound );
             if ( m_activeActor.Spells.Length == 0 ) {
                 Output( $"{m_activeActor.name} has no spells" );
                 return;
@@ -620,6 +645,7 @@ public class BattleManager : MonoBehaviour
         if ( m_isRunning == false ) return;
 
         if ( m_enemyList.Count == 0 ) {
+            PlaySound( m_victorySound );
             m_win.SetActive( true );
             m_isRunning = false;
             OnFinish.Invoke();
@@ -634,6 +660,7 @@ public class BattleManager : MonoBehaviour
             }
         }
         if ( gameOver ) {
+            PlaySound( m_gameOverSound );
             m_gameOver.SetActive( true );
             m_isRunning = false;
             return;
@@ -697,7 +724,16 @@ public class BattleManager : MonoBehaviour
         return TryAttack( a_target, Color.black );
     }
 
-    private bool TryAttack( Actor a_target, Color a_flashColor ) {
+    private void PlaySoundDelayed( AudioClip a_sound, float a_delaySec ) {
+        StartCoroutine( PlaySoundDelayedCoroutine( a_sound, a_delaySec ) );
+    }
+
+    private IEnumerator PlaySoundDelayedCoroutine( AudioClip a_sound, float a_delaySec ) {
+        yield return new WaitForSeconds( a_delaySec );
+        PlaySound( a_sound );
+    }
+
+    private bool TryAttack( Actor a_target, Color a_flashColor, bool a_isSpell = false ) {
         if ( a_target.IsDead ) return false;
 
         var damage = m_activeActor.TryAttack( a_target );
@@ -708,8 +744,13 @@ public class BattleManager : MonoBehaviour
         m_activeActor.ActorSprite.AnimateAttack( targetPos );
         a_target.ActorSprite.Flash( a_flashColor, AttackMoveTime / 2f );
 
-        if ( IsEnemy( m_activeActor ) ) m_enemyChargePoints += m_chargePointsPerAttack;
-        else m_playerChargePoints += m_chargePointsPerAttack;
+        PlaySoundDelayed( a_isSpell ? m_castSound : m_hitSound, AttackMoveTime / 2f );
+        PlaySoundDelayed( a_target.IsDead ? m_deathSound : m_hurtSound, AttackMoveTime / 2f + 0.2f );
+
+        if ( a_isSpell == false ) {
+            if ( IsEnemy( m_activeActor ) ) m_enemyChargePoints += m_chargePointsPerAttack;
+            else m_playerChargePoints += m_chargePointsPerAttack;
+        }
 
         m_damageText.transform.position = a_target.ActorSprite.transform.position + Vector3.up;
         m_damageText.Text = $"{damage}";

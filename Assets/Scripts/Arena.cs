@@ -26,6 +26,7 @@ public class Arena : MonoBehaviour
     private ArenaLevel CurrentLevel {  get { return m_arenaLevelList[m_arenaLevelIndex]; } }
 
     private int m_arenaLevelIndex = -1;
+    private bool m_isRunning = false;
 
     private void Start() {
         m_transitionTextMesh.text = "";
@@ -34,6 +35,7 @@ public class Arena : MonoBehaviour
     }
 
     private void NextLevel() {
+        m_isRunning = true;
         ++m_arenaLevelIndex;
         StartCoroutine( Transition() );
     }

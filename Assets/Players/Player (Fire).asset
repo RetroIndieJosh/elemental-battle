@@ -25,7 +25,7 @@ MonoBehaviour:
   m_fieldSprite: {fileID: 21300000, guid: f6fe0ffaa4d735849ab485e924b5bce2, type: 3}
   m_portraitSprite: {fileID: 21300000, guid: a92594c7e3e39e14f84dfbf0abc5fd1c, type: 3}
   m_strengthIncPerLevel: 1
-  m_hitPointsIncPerLevel: 7
+  m_hitPointsIncPerLevel: 0
   m_speedIncPerLevel: 3
   m_levelCap: 5
   m_spellList:
@@ -41,7 +41,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 32ab4d1c3a4cace48bad0d928ae85aec, type: 2}
     - {fileID: 11400000, guid: 9421f20abbb1c9548acfe900b5b562e4, type: 2}
     - {fileID: 11400000, guid: d9b1f2bedce17114fb8024c06f353151, type: 2}
-    m_hitPointsMax: 17
+    m_hitPointsMax: 10
     m_speed: 13
     m_strength: 2
   - name: Level 2
@@ -49,7 +49,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 32ab4d1c3a4cace48bad0d928ae85aec, type: 2}
     - {fileID: 11400000, guid: 9421f20abbb1c9548acfe900b5b562e4, type: 2}
     - {fileID: 11400000, guid: d9b1f2bedce17114fb8024c06f353151, type: 2}
-    m_hitPointsMax: 24
+    m_hitPointsMax: 10
     m_speed: 16
     m_strength: 3
   - name: Level 3
@@ -58,7 +58,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 9421f20abbb1c9548acfe900b5b562e4, type: 2}
     - {fileID: 11400000, guid: d9b1f2bedce17114fb8024c06f353151, type: 2}
     - {fileID: 11400000, guid: 32ab4d1c3a4cace48bad0d928ae85aec, type: 2}
-    m_hitPointsMax: 31
+    m_hitPointsMax: 10
     m_speed: 19
     m_strength: 4
   - name: Level 4
@@ -67,7 +67,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 9421f20abbb1c9548acfe900b5b562e4, type: 2}
     - {fileID: 11400000, guid: d9b1f2bedce17114fb8024c06f353151, type: 2}
     - {fileID: 11400000, guid: 32ab4d1c3a4cace48bad0d928ae85aec, type: 2}
-    m_hitPointsMax: 38
+    m_hitPointsMax: 10
     m_speed: 22
     m_strength: 5
   - name: Level 5
@@ -76,6 +76,6 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 9421f20abbb1c9548acfe900b5b562e4, type: 2}
     - {fileID: 11400000, guid: d9b1f2bedce17114fb8024c06f353151, type: 2}
     - {fileID: 11400000, guid: 32ab4d1c3a4cace48bad0d928ae85aec, type: 2}
-    m_hitPointsMax: 45
+    m_hitPointsMax: 10
     m_speed: 25
     m_strength: 6
