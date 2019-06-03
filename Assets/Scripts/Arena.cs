@@ -4,6 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+[System.Serializable]
+public class ArenaLevel
+{
+    public string name = "Arena Level";
+    public string openMessage = "";
+    public EncounterRegion encounterRegion = null;
+}
+
 public class Arena : MonoBehaviour
 {
     [SerializeField] private float m_transitionFadeTimeSec = 2f;
@@ -11,12 +19,12 @@ public class Arena : MonoBehaviour
     [SerializeField] private TextMeshProUGUI m_transitionTextMesh = null;
 
     [SerializeField] private bool m_runOnStart = false;
-    [SerializeField] private EncounterRegion m_encounterRegion = null;
+    [SerializeField] private List<ArenaLevel> m_arenaLevelList = new List<ArenaLevel>();
     [SerializeField] private List<ArenaPlayer> m_arenaPlayerList = new List<ArenaPlayer>();
 
-    [SerializeField] private List<string> m_battleStartMessageList = new List<string>();
+    private ArenaLevel CurrentLevel {  get { return m_arenaLevelList[m_arenaLevelIndex]; } }
 
-    private int m_arenaLevel = 0;
+    private int m_arenaLevelIndex = -1;
 
     private void Start() {
         m_transitionTextMesh.text = "";
@@ -25,20 +33,15 @@ public class Arena : MonoBehaviour
     }
 
     private void NextLevel() {
+        ++m_arenaLevelIndex;
         StartCoroutine( Transition() );
     }
 
     private IEnumerator Transition() {
-        var msg = "";
-        if( m_transitionTextMesh != null && m_battleStartMessageList.Count > m_arenaLevel )
-            msg = m_battleStartMessageList[m_arenaLevel];
+        if ( LoadBattle() == false ) yield break;
 
-        ++m_arenaLevel;
-
-        if ( string.IsNullOrEmpty( msg ) == false )
-            m_transitionTextMesh.text = $"~ Level {m_arenaLevel} ~\n{msg}";
-
-        LoadBattle();
+        if ( m_transitionTextMesh != null && string.IsNullOrEmpty( CurrentLevel.openMessage ) == false )
+            m_transitionTextMesh.text = $"~ {CurrentLevel.name} ~\n{CurrentLevel.openMessage}";
 
         var fadeBackground = m_transitionBackground.FadeOutCoroutine( m_transitionFadeTimeSec );
         StartCoroutine( fadeBackground );
@@ -46,42 +49,36 @@ public class Arena : MonoBehaviour
 
         m_transitionTextMesh.text = "";
 
-        /*
-        var fadeInBackground = m_transitionBackground.FadeInCoroutine( fadeTime );
-        //StartCoroutine( fadeInBackground );
-        var fadeInText = m_transitionTextMesh.FadeInCoroutine( fadeTime );
-        //StartCoroutine( fadeInText );
-        //yield return new WaitForSeconds( fadeTime );
-
-        //var fadeOutBackground = m_transitionBackground.FadeOutCoroutine( fadeTime );
-        var fadeOutBackground = m_transitionBackground.FadeCoroutineHandler( fadeTime, false );
-        StartCoroutine( fadeOutBackground );
-        //var fadeOutText = m_transitionTextMesh.FadeOutCoroutine( fadeTime );
-        var fadeOutText = m_transitionTextMesh.FadeCoroutineHandler( fadeTime, false );
-        StartCoroutine( fadeOutText );
-        yield return new WaitForSeconds( fadeTime );
-        */
-
         BattleManager.instance.StartBattle();
     }
 
-    private void LoadBattle() {
-        if( m_encounterRegion == null ) {
-            Debug.LogWarning( "[Arena] Tried to start without an encounter region. Aborting." );
-            return;
+    private bool LoadBattle() {
+        var encounterRegion = CurrentLevel.encounterRegion;
+        if( encounterRegion == null ) {
+            for( var i = m_arenaLevelIndex; i >= 0; --i ) {
+                encounterRegion = m_arenaLevelList[i].encounterRegion;
+                if ( encounterRegion != null ) break;
+            }
+
+            if( encounterRegion == null ) {
+                Debug.LogError( $"[Arena] No encounter region for level {m_arenaLevelIndex} ({CurrentLevel.name})" +
+                    $" and no fallback. Aborting battle load." );
+                return false;
+            }
         }
 
         BattleManager.instance.Clear();
 
-        var enemyList = m_encounterRegion.GenerateEncounter();
+        var enemyList = encounterRegion.GenerateEncounter();
         BattleManager.instance.AddEnemies( enemyList );
 
         var playerList = new List<Actor>();
         foreach ( var arenaPlayer in m_arenaPlayerList )
-            if ( arenaPlayer.firstLevel <= m_arenaLevel )
+            if ( arenaPlayer.firstLevel <= m_arenaLevelIndex )
                 playerList.Add( arenaPlayer.player );
         BattleManager.instance.AddPlayers( playerList );
 
         BattleManager.instance.LoadBattle();
+        return true;
     }
 }

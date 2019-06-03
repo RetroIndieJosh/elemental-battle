@@ -1,11 +1,17 @@
-- between encounters: heal players, clear CP
-
-- active actor highlight
-- target selection
-
-- generate attributes on build
-
-- split BattleManager into:
-        player control
-        enemy AI
-        visuals
+- [ActorAdvancementDef] increment & modify inc
+- [ActorAdvancementDef] percent (1f = 100%) vs value (int)
+- [ActorAdvancementDef] rounding methods (floor, avg, ceil)
+- [ActorDef] generate sample (show levels)
+- [ActorDef] set ActorAdvancementDef
+- [Arena] EncounterRegion for each level (fall back to most recent when null)
+- [Arena] Heal players and clear CP between encounters (with toggle)
+- [BattleManager] split into player control, enemy AI, and visuals
+- [Encounter] count as range (min/max)
+- [Encounter] Editor: when min changed, if max < min, max = min
+- [Encounter] Editor: when max changed, if min > max, min = max
+- [EncounterRegion] fall back to most recent ActorDef when null
+- [Spell] Different types: damage, heal, buff, etc.
+- [UI] Display icons for menu instead of text
+- [game] Title screen with credit (click name for pronounce)
+- [input] Icons for each button and key
+- [system] Select target when attacking/casting

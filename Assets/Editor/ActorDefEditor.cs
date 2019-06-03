@@ -10,12 +10,6 @@ public class ActorDefEditor : Editor
     public override void OnInspectorGUI() {
         serializedObject.Update();
 
-        /*
-        EditorGUILayout.LabelField( "State" );
-        var stateProp = FindProperty( "m_stateIndex", SerializedPropertyType.Integer );
-        stateProp.intValue = EditorGUILayout.Popup( stateProp.intValue, stateComp.StateNameList.ToArray() );
-        */
-
         DrawDefaultInspector();
 
         GUILayout.Label( "WARNING: Overwrites all Level Tweaking!", EditorStyles.boldLabel );
