@@ -28,5 +28,5 @@ MonoBehaviour:
     valueAdvancementMode: 0
     modAdvancementMode: 0
     valueBase: 1
-    modBase: 0.5
-    modMod: 0
+    modBase: 1
+    modMod: 1

@@ -8,32 +8,6 @@ public enum AdvancementMode
     Mult
 }
 
-[System.Serializable]
-public class Advancement
-{
-    public AdvancementMode valueAdvancementMode = AdvancementMode.Add;
-    public AdvancementMode modAdvancementMode = AdvancementMode.Add;
-
-    public float valueBase = 1f;
-    public float modBase = 1f;
-    public float modMod = 1f;
-
-    public int GetValueForLevel(int a_level ) {
-        var val = valueBase;
-        for( var level = 1; level < a_level; ++level ) {
-            var mod = modBase;
-            if ( modAdvancementMode == AdvancementMode.Add )
-                mod += modMod;
-            else mod *= modMod;
-
-            if ( valueAdvancementMode == AdvancementMode.Add )
-                val += mod;
-            else val *= mod;
-        }
-
-        return Mathf.FloorToInt( val );
-    }
-}
 
 [CreateAssetMenu(fileName = "New Actor Advancement Def", menuName = "Actor Advancement Def", order = 1)]
 public class ActorAdvancementDef : ScriptableObject
