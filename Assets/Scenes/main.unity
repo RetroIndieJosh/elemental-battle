@@ -894,7 +894,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_actorDef: {fileID: 11400000, guid: 645ef6bec6af9344ca1ea08080f4ee18, type: 2}
-  m_startLevel: 6
+  m_startLevel: 3
   ActorSprite: {fileID: 0}
 --- !u!1 &663009917
 GameObject:
@@ -1931,7 +1931,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_actorDef: {fileID: 11400000, guid: c5e746b26ab338f4191ab90045d37120, type: 2}
-  m_startLevel: 9
+  m_startLevel: 6
   ActorSprite: {fileID: 0}
 --- !u!4 &1130031030
 Transform:
@@ -3211,7 +3211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_actorDef: {fileID: 11400000, guid: 5bc865658980b8d43ab72b7c82ea5586, type: 2}
-  m_startLevel: 1
+  m_startLevel: 3
   ActorSprite: {fileID: 0}
 --- !u!4 &1798394197
 Transform:
@@ -3257,7 +3257,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce4794afabc70f9479516991b81aa4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_transitionFadeTimeSec: 0
+  m_transitionFadeTimeSec: 4
   m_transitionBackground: {fileID: 1576914489}
   m_transitionTextMesh: {fileID: 1606898368}
   m_runOnStart: 1
@@ -3432,7 +3432,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_actorDef: {fileID: 11400000, guid: 2b2300746c98fef43b1b726bbb6f0a2e, type: 2}
-  m_startLevel: 8
+  m_startLevel: 5
   ActorSprite: {fileID: 0}
 --- !u!4 &1878036266
 Transform:
@@ -3633,7 +3633,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_actorDef: {fileID: 11400000, guid: b396c23cf860dea4aad4f1ae0d370526, type: 2}
-  m_startLevel: 7
+  m_startLevel: 4
   ActorSprite: {fileID: 0}
 --- !u!4 &1902136270
 Transform:

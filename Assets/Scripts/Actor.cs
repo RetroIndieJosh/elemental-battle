@@ -92,4 +92,10 @@ public class Actor : MonoBehaviour
 
         Set( m_actorDef, m_startLevel );
     }
+
+    public void SetLevel( int a_level ) {
+        Set( m_actorDef, m_startLevel );
+    }
+
+    public int Level {  get { return m_attributes.level; } }
 }

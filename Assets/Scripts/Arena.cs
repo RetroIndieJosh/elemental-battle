@@ -72,14 +72,22 @@ public class Arena : MonoBehaviour
 
         BattleManager.instance.Clear();
 
-        var enemyList = encounterRegion.GenerateEncounter();
-        BattleManager.instance.AddEnemies( enemyList );
-
         var playerList = new List<Actor>();
         foreach ( var arenaPlayer in m_arenaPlayerList )
             if ( arenaPlayer.firstLevel <= m_arenaLevelIndex )
                 playerList.Add( arenaPlayer.player );
         BattleManager.instance.AddPlayers( playerList );
+
+        var enemyList = encounterRegion.GenerateEncounter();
+        /*
+        var enemyLevel = 0;
+        foreach ( var player in playerList )
+            if( player.Level > enemyLevel )
+                enemyLevel = player.Level;
+        foreach( var enemy in enemyList)
+            enemy.SetLevel( enemyLevel );
+            */
+        BattleManager.instance.AddEnemies( enemyList );
 
         BattleManager.instance.LoadBattle();
         return true;

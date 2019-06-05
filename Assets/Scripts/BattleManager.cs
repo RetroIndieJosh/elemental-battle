@@ -664,6 +664,11 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    private IEnumerator FinishAfter( float a_seconds ) {
+        yield return new WaitForSeconds( a_seconds );
+        OnFinish.Invoke();
+    }
+
     private void Update() {
         if ( m_activeActorDisplay.sprite == null ) m_activeActorDisplay.color = Color.clear;
         else m_activeActorDisplay.color = Color.white;
@@ -674,7 +679,7 @@ public class BattleManager : MonoBehaviour
             PlaySound( m_victorySound );
             m_win.SetActive( true );
             m_isRunning = false;
-            OnFinish.Invoke();
+            StartCoroutine( FinishAfter( 2f ) );
             return;
         }
 
