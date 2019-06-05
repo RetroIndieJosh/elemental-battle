@@ -379,6 +379,9 @@ public class BattleManager : MonoBehaviour
     private void Awake() {
         instance = this;
 
+        m_fieldPrimaryMaterial.color = ElementColor( Element.None );
+        m_fieldSecondaryMaterial.color = ElementColor( Element.None );
+
         var fieldEffectDisplayCount = m_fieldEffectMax * 2;
         m_fieldEffectDisplayImage = new Image[fieldEffectDisplayCount];
         for ( var i = 0; i < fieldEffectDisplayCount; ++i ) {
