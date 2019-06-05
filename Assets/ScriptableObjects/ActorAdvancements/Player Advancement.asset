@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d674919c6559ae4e9a2e428f99cdece, type: 3}
+  m_Name: Player Advancement
+  m_EditorClassIdentifier: 
+  m_attackAdvancement:
+    valueAdvancementMode: 1
+    modAdvancementMode: 0
+    valueBase: 1
+    modBase: 1.5
+    modMod: 0.1
+  m_hitPointsAdvancement:
+    valueAdvancementMode: 0
+    modAdvancementMode: 0
+    valueBase: 10
+    modBase: 1
+    modMod: 1
+  m_speedAdvancement:
+    valueAdvancementMode: 0
+    modAdvancementMode: 0
+    valueBase: 1
+    modBase: 1
+    modMod: 1

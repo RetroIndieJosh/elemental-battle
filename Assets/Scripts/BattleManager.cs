@@ -167,6 +167,7 @@ public class BattleManager : MonoBehaviour
 
     private PlayerMenuState CurPlayerMenuState {
         set {
+            ClearMenu();
             m_curPlayerMenuState = value;
 
             switch ( m_curPlayerMenuState ) {
@@ -286,15 +287,6 @@ public class BattleManager : MonoBehaviour
             m_playerPortraitImage[i] = statusPortrait.GetComponentInChildren<Image>();
             m_playerPortraitTextMesh[i] = statusPortrait.GetComponentInChildren<TextMeshProUGUI>();
             statusPortrait.transform.SetParent( m_statusPortraitsParent.transform, false );
-        }
-
-        m_menuEntryImage = new Image[5];
-        m_menuEntryTextMesh = new TextMeshProUGUI[5];
-        for( var i = 0; i < 5; ++i ) {
-            var menuEntry = Instantiate( m_menuEntryPrefab );
-            m_menuEntryImage[i] = menuEntry.GetComponentInChildren<Image>();
-            m_menuEntryTextMesh[i] = menuEntry.GetComponentInChildren<TextMeshProUGUI>();
-            menuEntry.transform.SetParent( m_menuParent.transform, false );
         }
 
         for ( var i = 0; i < m_enemyList.Count; ++i ) {
@@ -577,6 +569,14 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    private void ClearMenu() {
+        m_menuHeaderTextMesh.text = "";
+        for ( var i = 0; i < m_menuEntryImage.Length; ++i ) {
+            m_menuEntryImage[i].sprite = null;
+            m_menuEntryTextMesh[i].text = "";
+        }
+    }
+
     private void ShowControlsSpellMenu() {
         for ( var i = 0; i < m_activeActor.Spells.Length; ++i ) {
             var spell = m_activeActor.Spells[i];
@@ -658,6 +658,15 @@ public class BattleManager : MonoBehaviour
         m_castKey[1] = Keyboard.current.cKey;
         m_castKey[2] = Keyboard.current.vKey;
         m_castKey[3] = Keyboard.current.bKey;
+
+        m_menuEntryImage = new Image[5];
+        m_menuEntryTextMesh = new TextMeshProUGUI[5];
+        for( var i = 0; i < 5; ++i ) {
+            var menuEntry = Instantiate( m_menuEntryPrefab );
+            m_menuEntryImage[i] = menuEntry.GetComponentInChildren<Image>();
+            m_menuEntryTextMesh[i] = menuEntry.GetComponentInChildren<TextMeshProUGUI>();
+            menuEntry.transform.SetParent( m_menuParent.transform, false );
+        }
     }
 
     private void UpdatePlayerDisplay() {
