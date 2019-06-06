@@ -19,20 +19,20 @@ public class ActorSprite : MonoBehaviour
         get { return m_isVisible; }
         set {
             m_isVisible = value;
-            if ( m_isVisible ) GetComponent<SpriteRenderer>().color = Color.white;
-            else GetComponent<SpriteRenderer>().color = Color.clear;
+            if ( m_isVisible ) m_spriteRenderer.color = Color.white;
+            else m_spriteRenderer.color = Color.clear;
         }
     }
 
     private bool m_isVisible = true;
 
     public Color Color {
-        set { GetComponent<SpriteRenderer>().color = value; }
+        set { m_spriteRenderer.color = value; }
     }
 
     public Sprite Sprite {
-        get { return GetComponent<SpriteRenderer>().sprite; }
-        set { GetComponent<SpriteRenderer>().sprite = value; }
+        get { return m_spriteRenderer.sprite; }
+        set { m_spriteRenderer.sprite = value; }
     }
 
     private bool m_isSelected = false;
@@ -100,7 +100,7 @@ public class ActorSprite : MonoBehaviour
 
         if ( m_isVisible == false ) yield break;
 
-        var spriteRenderer = GetComponent<SpriteRenderer>();
+        var spriteRenderer = m_spriteRenderer;
         spriteRenderer.color = a_color;
         yield return new WaitForSeconds( 0.1f );
 
@@ -109,8 +109,15 @@ public class ActorSprite : MonoBehaviour
         spriteRenderer.color = Color.white;
     }
 
+    private SpriteRenderer m_spriteRenderer = null;
+
+    private void Awake() {
+        m_spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
     private void Start() {
         m_startPos = transform.position;
+        m_spriteRenderer.sprite = null;
     }
 
     void Update() {

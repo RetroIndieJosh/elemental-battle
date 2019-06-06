@@ -279,8 +279,12 @@ public class BattleManager : MonoBehaviour, BattleControls.ITopMenuActions
             statusPortrait.transform.SetParent( m_statusPortraitsParent.transform, false );
         }
 
+        foreach ( var actorSprite in m_enemyActorSpriteList )
+            actorSprite.gameObject.SetActive( false );
+
         for ( var i = 0; i < m_enemyList.Count; ++i ) {
             if ( i >= m_enemyActorSpriteList.Count ) break;
+            m_enemyActorSpriteList[i].gameObject.SetActive( true );
             m_enemyActorSpriteList[i].Sprite = m_enemyList[i].FieldSprite;
         }
 
@@ -703,6 +707,20 @@ public class BattleManager : MonoBehaviour, BattleControls.ITopMenuActions
         }
     }
 
+    private void UpdateEnemyHealthBars() {
+        foreach( var enemy in m_enemyList ) {
+            var healthBar = enemy.ActorSprite.GetComponentInChildren<FillBarUI>();
+            if ( healthBar == null ) continue;
+            healthBar.FillPercent = (float)enemy.HitPoints / enemy.HitPointsMax;
+            if ( healthBar.FillPercent < 0.2 )
+                healthBar.FillColor = Color.red;
+            else if ( healthBar.FillPercent < 0.4 )
+                healthBar.FillColor = Color.yellow;
+            else
+                healthBar.FillColor = Color.green;
+        }
+    }
+
     private void UpdatePlayerDisplay() {
         for ( var i = 0; i < m_playerList.Count; ++i ) {
             m_playerPortraitImage[i].sprite = m_playerList[i].PortraitSprite;
@@ -768,6 +786,7 @@ public class BattleManager : MonoBehaviour, BattleControls.ITopMenuActions
     private void UpdateHud() {
         if ( m_isRunning == false ) return;
 
+        UpdateEnemyHealthBars();
         UpdatePlayerDisplay();
 
         m_fieldPrimaryMaterial.color = ElementColor( FieldElementPrimary );

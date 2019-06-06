@@ -18,4 +18,4 @@ MonoBehaviour:
     - levelMin: 1
       levelMax: 1
       countMin: 1
-      countMax: 5
+      countMax: 1

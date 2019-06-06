@@ -36,9 +36,10 @@ public class Actor : MonoBehaviour
 
     [HideInInspector] public ActorSprite ActorSprite = null;
 
-    private int Attack { get { return m_stats.attack; } }
-    private int HitPointsMax { get { return m_stats.hitPointsMax; } }
-    private int Speed { get { return m_stats.speed; } }
+    public int Attack { get { return m_stats.attack; } }
+    public int HitPoints {  get { return m_hitPoints; } }
+    public int HitPointsMax { get { return m_stats.hitPointsMax; } }
+    public int Speed { get { return m_stats.speed; } }
     private List<Spell> SpellList { get { return m_stats.spellList; } }
 
     private ActorStats m_stats = null;
@@ -92,6 +93,9 @@ public class Actor : MonoBehaviour
         }
 
         Set( m_actorDef, m_startLevel );
+    }
+
+    private void Update() {
     }
 
     public void SetLevel( int a_level ) {

@@ -11,7 +11,10 @@ public class FillBarUI : MonoBehaviour
     [SerializeField] private Image m_fillImage = null;
     [SerializeField, Range(0f, 1f)] private float m_fillPercent = 1f;
 
-    public float FillPercent { set { m_fillPercent = Mathf.Clamp( value, 0f, 1f ); } }
+    public Color FillColor {  set { m_fillImage.color = value; } }
+    public float FillPercent {
+        get { return m_fillPercent; }
+        set { m_fillPercent = Mathf.Clamp( value, 0f, 1f ); } }
 
     private RectTransform m_rectTransform;
 
