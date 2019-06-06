@@ -9,7 +9,7 @@ class SpellEntry
     public int level = 0;
 }
 
-[CreateAssetMenu(fileName = "New Actor Def", menuName = "Actor Def", order = 1)]
+[CreateAssetMenu(fileName = "New Actor Def", menuName = "RPG/Actor Def", order = 1)]
 public class ActorDef : ScriptableObject
 {
     [Header( "Visual" )]

@@ -1,0 +1,294 @@
+// GENERATED AUTOMATICALLY FROM 'Assets/ScriptableObjects/Battle Controls.inputactions'
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
+
+public class BattleControls : IInputActionCollection
+{
+    private InputActionAsset asset;
+    public BattleControls()
+    {
+        asset = InputActionAsset.FromJson(@"{
+    ""name"": ""Battle Controls"",
+    ""maps"": [
+        {
+            ""name"": ""Top Menu"",
+            ""id"": ""4ef48dd8-9003-4238-92ba-04613c49ae24"",
+            ""actions"": [
+                {
+                    ""name"": ""Attack"",
+                    ""id"": ""a751fb33-899a-4e88-929f-d514ff3ef236"",
+                    ""expectedControlLayout"": ""Key"",
+                    ""continuous"": false,
+                    ""passThrough"": false,
+                    ""initialStateCheck"": false,
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""bindings"": []
+                },
+                {
+                    ""name"": ""Defend"",
+                    ""id"": ""ba48886f-a7c3-4d90-bdd8-900776c944cc"",
+                    ""expectedControlLayout"": """",
+                    ""continuous"": false,
+                    ""passThrough"": false,
+                    ""initialStateCheck"": false,
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""bindings"": []
+                },
+                {
+                    ""name"": ""Spells"",
+                    ""id"": ""e3cf1760-0810-4bc1-9afc-ad06c4f309fd"",
+                    ""expectedControlLayout"": """",
+                    ""continuous"": false,
+                    ""passThrough"": false,
+                    ""initialStateCheck"": false,
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""bindings"": []
+                },
+                {
+                    ""name"": ""Help"",
+                    ""id"": ""b9a126ee-72d9-4add-8751-5a6aa20561aa"",
+                    ""expectedControlLayout"": """",
+                    ""continuous"": false,
+                    ""passThrough"": false,
+                    ""initialStateCheck"": false,
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""bindings"": []
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""f4ee841a-967c-42c4-831a-90e7dacdcf8e"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false,
+                    ""modifiers"": """"
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""66bd919b-8388-45f8-abc1-db39eb6165a2"",
+                    ""path"": ""<Keyboard>/z"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false,
+                    ""modifiers"": """"
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5bf0e68e-31c8-447f-bf35-51ef1994540a"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Defend"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false,
+                    ""modifiers"": """"
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a9ed2f83-64b5-48b5-8b1a-5811a412d574"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Defend"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false,
+                    ""modifiers"": """"
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""38ff66e7-dd20-4998-8049-12a843151705"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Spells"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false,
+                    ""modifiers"": """"
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""16305bec-48b3-4aa0-a1cd-2a241cad457c"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Spells"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false,
+                    ""modifiers"": """"
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d25baf29-e841-4f78-8c03-21496f63b0d7"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": ""Hold"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Help"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false,
+                    ""modifiers"": """"
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8701d14c-2568-444d-b71c-7859a873fabc"",
+                    ""path"": ""<Keyboard>/f1"",
+                    ""interactions"": ""Hold"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Help"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false,
+                    ""modifiers"": """"
+                }
+            ]
+        }
+    ],
+    ""controlSchemes"": []
+}");
+        // Top Menu
+        m_TopMenu = asset.GetActionMap("Top Menu");
+        m_TopMenu_Attack = m_TopMenu.GetAction("Attack");
+        m_TopMenu_Defend = m_TopMenu.GetAction("Defend");
+        m_TopMenu_Spells = m_TopMenu.GetAction("Spells");
+        m_TopMenu_Help = m_TopMenu.GetAction("Help");
+    }
+
+    ~BattleControls()
+    {
+        UnityEngine.Object.Destroy(asset);
+    }
+
+    public InputBinding? bindingMask
+    {
+        get => asset.bindingMask;
+        set => asset.bindingMask = value;
+    }
+
+    public ReadOnlyArray<InputDevice>? devices
+    {
+        get => asset.devices;
+        set => asset.devices = value;
+    }
+
+    public ReadOnlyArray<InputControlScheme> controlSchemes
+    {
+        get => asset.controlSchemes;
+    }
+
+    public bool Contains(InputAction action)
+    {
+        return asset.Contains(action);
+    }
+
+    public IEnumerator<InputAction> GetEnumerator()
+    {
+        return asset.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+
+    public void Enable()
+    {
+        asset.Enable();
+    }
+
+    public void Disable()
+    {
+        asset.Disable();
+    }
+
+    // Top Menu
+    private InputActionMap m_TopMenu;
+    private ITopMenuActions m_TopMenuActionsCallbackInterface;
+    private InputAction m_TopMenu_Attack;
+    private InputAction m_TopMenu_Defend;
+    private InputAction m_TopMenu_Spells;
+    private InputAction m_TopMenu_Help;
+    public struct TopMenuActions
+    {
+        private BattleControls m_Wrapper;
+        public TopMenuActions(BattleControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Attack { get { return m_Wrapper.m_TopMenu_Attack; } }
+        public InputAction @Defend { get { return m_Wrapper.m_TopMenu_Defend; } }
+        public InputAction @Spells { get { return m_Wrapper.m_TopMenu_Spells; } }
+        public InputAction @Help { get { return m_Wrapper.m_TopMenu_Help; } }
+        public InputActionMap Get() { return m_Wrapper.m_TopMenu; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled { get { return Get().enabled; } }
+        public InputActionMap Clone() { return Get().Clone(); }
+        public static implicit operator InputActionMap(TopMenuActions set) { return set.Get(); }
+        public void SetCallbacks(ITopMenuActions instance)
+        {
+            if (m_Wrapper.m_TopMenuActionsCallbackInterface != null)
+            {
+                Attack.started -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnAttack;
+                Attack.performed -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnAttack;
+                Attack.canceled -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnAttack;
+                Defend.started -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnDefend;
+                Defend.performed -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnDefend;
+                Defend.canceled -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnDefend;
+                Spells.started -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnSpells;
+                Spells.performed -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnSpells;
+                Spells.canceled -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnSpells;
+                Help.started -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnHelp;
+                Help.performed -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnHelp;
+                Help.canceled -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnHelp;
+            }
+            m_Wrapper.m_TopMenuActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                Attack.started += instance.OnAttack;
+                Attack.performed += instance.OnAttack;
+                Attack.canceled += instance.OnAttack;
+                Defend.started += instance.OnDefend;
+                Defend.performed += instance.OnDefend;
+                Defend.canceled += instance.OnDefend;
+                Spells.started += instance.OnSpells;
+                Spells.performed += instance.OnSpells;
+                Spells.canceled += instance.OnSpells;
+                Help.started += instance.OnHelp;
+                Help.performed += instance.OnHelp;
+                Help.canceled += instance.OnHelp;
+            }
+        }
+    }
+    public TopMenuActions @TopMenu
+    {
+        get
+        {
+            return new TopMenuActions(this);
+        }
+    }
+    public interface ITopMenuActions
+    {
+        void OnAttack(InputAction.CallbackContext context);
+        void OnDefend(InputAction.CallbackContext context);
+        void OnSpells(InputAction.CallbackContext context);
+        void OnHelp(InputAction.CallbackContext context);
+    }
+}

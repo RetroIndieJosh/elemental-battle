@@ -10,7 +10,7 @@ using UnityEngine.UI;
 using System.Collections;
 
 [DisallowMultipleComponent]
-public class BattleManager : MonoBehaviour
+public class BattleManager : MonoBehaviour, BattleControls.ITopMenuActions
 {
     private class TurnData
     {
@@ -123,16 +123,8 @@ public class BattleManager : MonoBehaviour
 
     private Actor m_activeActor = null;
     private int m_airEarthSpectrum = 0;
-    private ButtonControl m_attackButton = null;
-    private KeyControl m_attackKey = null;
-    private ButtonControl m_backButton = null;
-    private KeyControl m_backKey = null;
-    private ButtonControl[] m_castButton = null;
-    private KeyControl[] m_castKey = null;
     private PlayerMenuState m_curPlayerMenuState = PlayerMenuState.TopMenu;
     private int m_currentTurn = 0;
-    private ButtonControl m_defendButton = null;
-    private KeyControl m_defendKey = null;
     private int m_enemyChargePoints = 0;
     private List<Actor> m_enemyList = new List<Actor>();
     private int m_fireWaterSpectrum = 0;
@@ -140,8 +132,6 @@ public class BattleManager : MonoBehaviour
     private List<string> m_outputList = new List<string>();
     private int m_playerChargePoints = 0;
     private List<Actor> m_playerList = new List<Actor>();
-    private ButtonControl m_spellButton = null;
-    private KeyControl m_spellKey = null;
     private float m_timeSinceTurnStart = 0f;
     private List<TurnData> m_turnOrderList = new List<TurnData>();
 
@@ -385,6 +375,8 @@ public class BattleManager : MonoBehaviour
     }
 
     private bool CanCastSpell( int a_spellIndex ) {
+        if ( a_spellIndex < 0 || a_spellIndex >= m_activeActor.Spells.Length ) return false;
+
         if ( m_enemyList.Contains( m_activeActor ) )
             return SpellCost( a_spellIndex ) <= m_enemyChargePoints;
         else return SpellCost( a_spellIndex ) <= m_playerChargePoints;
@@ -466,52 +458,96 @@ public class BattleManager : MonoBehaviour
         else m_playerChargePoints -= SpellCost( a_spellIndex );
     }
 
-    private void PlayerSpellMenu() {
-        if ( m_backButton.wasPressedThisFrame || m_backKey.wasPressedThisFrame ) {
-            CurPlayerMenuState = PlayerMenuState.TopMenu;
-            return;
-        }
+    public void OnMenu1( InputAction.CallbackContext context ) {
+        Debug.Log( "Menu 1" );
+        if ( m_playerList.Contains( m_activeActor ) == false ) return;
+        if ( context.performed == false ) return;
 
-        var spells = m_activeActor.Spells;
-        for ( var i = 0; i < spells.Length; ++i ) {
-            if ( m_castButton[i].wasPressedThisFrame || m_castKey[i].wasPressedThisFrame ) {
-                PlaySound( m_menuSound );
-                if ( CanCastSpell( i ) ) {
-                    var target = m_enemyList.GetRandomElement();
-                    CastSpell( i, target );
-                    Next();
-                    return;
-                } else {
-                    Output( $"{m_activeActor.name} cannot cast {spells[i].name} (not enough CP)" );
-                }
-
+        PlaySound( m_menuSound );
+        if ( m_curPlayerMenuState == PlayerMenuState.TopMenu ) {
+            if ( m_enemyList.Contains( m_activeActor ) || m_curPlayerMenuState != PlayerMenuState.TopMenu )
                 return;
-            }
-        }
-    }
 
-    private void PlayerTopMenu() {
-        if ( m_attackButton.wasPressedThisFrame || m_attackKey.wasPressedThisFrame ) {
-            PlaySound( m_menuSound );
             var target = m_enemyList.GetRandomElement();
             TryAttack( target );
             Next();
-        } else if ( m_defendButton.wasPressedThisFrame || m_defendKey.wasPressedThisFrame ) {
-            PlaySound( m_menuSound );
+        } else if ( m_curPlayerMenuState == PlayerMenuState.SpellMenu ) {
+            PlayerCastSpell( 0 );
+        }
+    }
+
+    public void OnMenu2( InputAction.CallbackContext context ) {
+        Debug.Log( "Menu 2" );
+        if ( m_playerList.Contains( m_activeActor ) == false ) return;
+        if ( context.performed == false ) return;
+
+        PlaySound( m_menuSound );
+        if ( m_curPlayerMenuState == PlayerMenuState.TopMenu ) {
             m_activeActor.Defend();
             Output( $"{m_activeActor} is now defending" );
             Next();
-        } else if ( m_spellButton.wasPressedThisFrame || m_spellKey.wasPressedThisFrame ) {
-            PlaySound( m_menuSound );
+        } else if ( m_curPlayerMenuState == PlayerMenuState.SpellMenu ) {
+            PlayerCastSpell( 1 );
+        }
+    }
+
+    public void OnMenu3( InputAction.CallbackContext context ) {
+        Debug.Log( "Menu 3" );
+        if ( m_playerList.Contains( m_activeActor ) == false ) return;
+        if ( context.performed == false ) return;
+
+        PlaySound( m_menuSound );
+        if ( m_curPlayerMenuState == PlayerMenuState.TopMenu ) {
             if ( m_activeActor.Spells.Length == 0 ) {
+                Debug.Log( "No spells" );
                 Output( $"{m_activeActor.name} has no spells" );
                 return;
             }
 
             CurPlayerMenuState = PlayerMenuState.SpellMenu;
-        }
+        } else if ( m_curPlayerMenuState == PlayerMenuState.SpellMenu )
+            PlayerCastSpell( 2 );
+    }
 
-        m_help.SetActive( m_backButton.isPressed || m_backKey.isPressed );
+    public void OnMenu4( InputAction.CallbackContext context ) {
+        Debug.Log( "Menu 4" );
+        if ( m_playerList.Contains( m_activeActor ) == false ) return;
+        if ( context.performed == false ) return;
+
+        PlaySound( m_menuSound );
+        if ( m_curPlayerMenuState == PlayerMenuState.TopMenu ) {
+        } else if ( m_curPlayerMenuState == PlayerMenuState.SpellMenu ) {
+            PlayerCastSpell( 3 );
+        }
+    }
+
+    public void PlayerCastSpell( int a_spellIndex ) {
+        Debug.Log( "Try cast spell " + a_spellIndex );
+        var spells = m_activeActor.Spells;
+
+        if ( CanCastSpell( a_spellIndex ) ) {
+            var target = m_enemyList.GetRandomElement();
+            CastSpell( a_spellIndex, target );
+            Next();
+            return;
+        } 
+        Debug.Log( "Cannot cast spell " + a_spellIndex );
+    }
+
+    public void OnBack( InputAction.CallbackContext context ) {
+        Debug.Log( "Back" );
+        if ( context.performed == false ) return;
+        if ( m_playerList.Contains( m_activeActor ) == false ) return;
+
+        if ( m_curPlayerMenuState == PlayerMenuState.TopMenu ) {
+            if ( context.performed )
+                m_help.SetActive( true );
+
+            if ( context.canceled )
+                m_help.SetActive( false );
+        } else {
+            m_curPlayerMenuState = PlayerMenuState.TopMenu;
+        }
     }
 
     // TODO set player back to white color when revived
@@ -579,34 +615,46 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    private void ShowControlsSpellMenu() {
-        for ( var i = 0; i < m_activeActor.Spells.Length; ++i ) {
-            var spell = m_activeActor.Spells[i];
-            var color = CanCastSpell( i ) ? "green" : "red";
-            var spellName = spell.GetNameForElement( m_activeActor.Element );
-            var cost = SpellCost( i );
-            var keyboardInput = $"{m_castKey[i].displayName}";
-            m_menuEntryTextMesh[i].text = $"{keyboardInput} <color={color}>{spellName}: {cost} CP</color>\n";
-            m_menuEntryImage[i].sprite = UiManager.instance.GetSpriteFor( m_castButton[i] );
-        }
+    private string ControlString( InputAction a_control, string a_desc ) {
 
+        var str = "";
+        foreach( var binding in a_control.bindings ) {
+            var control = binding.path.Substring( binding.path.LastIndexOf( '/' ) + 1 );
+            switch( control ) {
+                case "buttonEast": control = "(X)"; break;
+                case "buttonNorth": control = "(Y)"; break;
+                case "buttonSouth": control = "(A)"; break;
+                case "buttonWest": control = "(B)"; break;
+                case "leftShoulder": control = "[LB]"; break;
+            }
+            str += $"{control} ";
+        }
+        return str + a_desc;
+    }
+
+    private void SpellControlEntry( int a_index, InputAction a_control ) {
+        if ( m_activeActor.Spells.Length > a_index ) {
+            var color = CanCastSpell( a_index ) ? "green" : "red";
+            m_menuEntryTextMesh[a_index].text = ControlString( a_control, 
+                $"<color={color}>{m_activeActor.Spells[a_index]}</color>" );
+        }
+    }
+
+    private void ShowControlsSpellMenu() {
         m_menuHeaderTextMesh.text = $"{m_activeActor.name} Spells";
-        m_menuEntryImage[m_activeActor.Spells.Length].sprite = UiManager.instance.GetSpriteFor( Gamepad.current.leftShoulder );
-        m_menuEntryTextMesh[m_activeActor.Spells.Length].text = $"\n{m_backKey.displayName} Back";
+        SpellControlEntry( 0, m_battleControls.TopMenu.Menu1 );
+        SpellControlEntry( 1, m_battleControls.TopMenu.Menu2 );
+        SpellControlEntry( 2, m_battleControls.TopMenu.Menu3 );
+        SpellControlEntry( 3, m_battleControls.TopMenu.Menu4 );
+        m_menuEntryTextMesh[4].text = ControlString( m_battleControls.TopMenu.Back, "Back" );
     }
 
     private void ShowControlsTopMenu() {
-        m_menuEntryTextMesh[0].text = $"{m_attackKey.displayName} Attack";
-        m_menuEntryImage[0].sprite = UiManager.instance.GetSpriteFor( m_attackButton );
-
-        m_menuEntryTextMesh[1].text = $"{m_defendKey.displayName} Defend";
-        m_menuEntryImage[1].sprite = UiManager.instance.GetSpriteFor( m_defendButton );
-
-        m_menuEntryTextMesh[2].text = $"{m_spellKey.displayName} Spells";
-        m_menuEntryImage[2].sprite = UiManager.instance.GetSpriteFor( m_spellButton );
-
-        m_menuEntryTextMesh[3].text = $"{m_backKey.displayName} Help";
-        m_menuEntryImage[3].sprite = UiManager.instance.GetSpriteFor( m_backButton );
+        m_menuEntryTextMesh[0].text = ControlString( m_battleControls.TopMenu.Menu1, "Attack" );
+        m_menuEntryTextMesh[1].text = ControlString( m_battleControls.TopMenu.Menu2, "Defend" );
+        m_menuEntryTextMesh[2].text = ControlString( m_battleControls.TopMenu.Menu3, "Spells" );
+        m_menuEntryTextMesh[3].text = ControlString( m_battleControls.TopMenu.Menu4, "Items (TODO)" );
+        m_menuEntryTextMesh[4].text = ControlString( m_battleControls.TopMenu.Back, "Help" );
 
         m_menuHeaderTextMesh.text = $"{m_activeActor.name}";
     }
@@ -635,31 +683,15 @@ public class BattleManager : MonoBehaviour
         return Mathf.Max( 1, cost );
     }
 
+    public BattleControls m_battleControls;
+
     private void Start() {
+        m_battleControls = new BattleControls();
+        m_battleControls.TopMenu.SetCallbacks( this );
+        m_battleControls.TopMenu.Enable();
+
         m_win.SetActive( false );
         m_gameOver.SetActive( false );
-
-        m_attackButton = Gamepad.current.aButton;
-        m_backButton = Gamepad.current.leftShoulder;
-        m_defendButton = Gamepad.current.bButton;
-        m_spellButton = Gamepad.current.yButton;
-
-        m_castButton = new ButtonControl[4];
-        m_castButton[0] = Gamepad.current.aButton;
-        m_castButton[1] = Gamepad.current.xButton;
-        m_castButton[2] = Gamepad.current.yButton;
-        m_castButton[3] = Gamepad.current.bButton;
-
-        m_attackKey = Keyboard.current.xKey;
-        m_backKey = Keyboard.current.escapeKey;
-        m_defendKey = Keyboard.current.cKey;
-        m_spellKey = Keyboard.current.vKey;
-
-        m_castKey = new KeyControl[4];
-        m_castKey[0] = Keyboard.current.xKey;
-        m_castKey[1] = Keyboard.current.cKey;
-        m_castKey[2] = Keyboard.current.vKey;
-        m_castKey[3] = Keyboard.current.bKey;
 
         m_menuEntryImage = new Image[5];
         m_menuEntryTextMesh = new TextMeshProUGUI[5];
@@ -810,10 +842,6 @@ public class BattleManager : MonoBehaviour
     }
 
     private void UpdateTurnPlayer() {
-        switch ( m_curPlayerMenuState ) {
-            case PlayerMenuState.SpellMenu: PlayerSpellMenu(); break;
-            case PlayerMenuState.TopMenu: PlayerTopMenu(); break;
-        }
     }
 }
 

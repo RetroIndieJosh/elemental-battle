@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using EditorGUITable;
 
-[CreateAssetMenu(fileName = "New Encounter", menuName = "Encounter", order = 1)]
+[CreateAssetMenu(fileName = "New Encounter", menuName = "RPG/Encounter", order = 1)]
 public class Encounter: ScriptableObject
 {
     [SerializeField] private List<EnemyEntry> m_enemyEntryList = new List<EnemyEntry>();

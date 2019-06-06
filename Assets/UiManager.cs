@@ -17,11 +17,13 @@ public class UiManager : MonoBehaviour
     [SerializeField] private Sprite m_buttonImageLB = null;
 
     public Sprite GetSpriteFor(ButtonControl a_button ) {
-        if ( a_button == Gamepad.current.aButton ) return m_buttonImageA;
-        else if ( a_button == Gamepad.current.bButton ) return m_buttonImageB;
-        else if ( a_button == Gamepad.current.xButton ) return m_buttonImageX;
-        else if ( a_button == Gamepad.current.yButton ) return m_buttonImageY;
-        else if ( a_button == Gamepad.current.leftShoulder ) return m_buttonImageLB;
+        if ( a_button == null ) return null;
+
+        if ( a_button.displayName == "A" ) return m_buttonImageA;
+        else if ( a_button.displayName == "B" ) return m_buttonImageB;
+        else if ( a_button.displayName == "X" ) return m_buttonImageX;
+        else if ( a_button.displayName == "Y" ) return m_buttonImageY;
+        else if ( a_button.displayName == "LB" ) return m_buttonImageLB;
         return null;
     }
 

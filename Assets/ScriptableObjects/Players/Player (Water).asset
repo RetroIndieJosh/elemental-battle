@@ -19,7 +19,7 @@ MonoBehaviour:
   m_element: 3
   m_spellList:
   - spell: {fileID: 11400000, guid: 32ab4d1c3a4cace48bad0d928ae85aec, type: 2}
-    level: 3
+    level: 1
   - spell: {fileID: 11400000, guid: 9421f20abbb1c9548acfe900b5b562e4, type: 2}
     level: 7
   - spell: {fileID: 11400000, guid: d9b1f2bedce17114fb8024c06f353151, type: 2}

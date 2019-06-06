@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Spell", menuName = "Spell", order = 1)]
+[CreateAssetMenu(fileName = "New Spell", menuName = "RPG/Spell", order = 1)]
 public class Spell : ScriptableObject
 {
     [SerializeField] private int m_cost = 1;

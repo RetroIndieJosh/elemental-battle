@@ -9,7 +9,7 @@ public enum AdvancementMode
 }
 
 
-[CreateAssetMenu(fileName = "New Actor Advancement Def", menuName = "Actor Advancement Def", order = 1)]
+[CreateAssetMenu(fileName = "New Actor Advancement Def", menuName = "RPG/Actor Advancement Def", order = 1)]
 public class ActorAdvancementDef : ScriptableObject
 {
     [SerializeField] Advancement m_attackAdvancement = new Advancement();
