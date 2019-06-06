@@ -3556,7 +3556,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_actorDef: {fileID: 11400000, guid: 5bc865658980b8d43ab72b7c82ea5586, type: 2}
-  m_startLevel: 3
+  m_startLevel: 1
   ActorSprite: {fileID: 0}
 --- !u!4 &1798394197
 Transform:

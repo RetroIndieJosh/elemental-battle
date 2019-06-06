@@ -21,7 +21,7 @@ MonoBehaviour:
   m_hitPointsAdvancement:
     valueAdvancementMode: 0
     modAdvancementMode: 0
-    valueBase: 1
+    valueBase: 5
     modBase: 1
     modMod: 1
   m_speedAdvancement:

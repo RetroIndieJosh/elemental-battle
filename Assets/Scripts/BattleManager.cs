@@ -423,6 +423,8 @@ public class BattleManager : MonoBehaviour
             m_currentTurn = m_turnOrderList[0].turnValue;
             m_turnOrderList.RemoveAt( 0 );
         } while ( m_nextActor.IsDead );
+
+        m_menuParent.SetActive( m_playerList.Contains( m_nextActor ) );
     }
 
     private void StartTurn() {
