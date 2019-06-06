@@ -3713,7 +3713,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce4794afabc70f9479516991b81aa4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_transitionFadeTimeSec: 4
+  m_transitionFadeTimeSec: 0
   m_transitionBackground: {fileID: 1576914489}
   m_transitionTextMesh: {fileID: 1606898368}
   m_runOnStart: 1

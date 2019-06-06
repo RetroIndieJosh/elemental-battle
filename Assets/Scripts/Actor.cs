@@ -23,7 +23,8 @@ public class Actor : MonoBehaviour
             else if ( healthPercent < 0.4f ) healthColor = Color.yellow;
 
             var healthColorStr = healthColor.ToHexString();
-            var stats = $"{name} ({Element.ToString()[0]})\n" +
+            var stats = $"{name} L{m_stats.level}\n" +
+                $"{Element.ToString()}\n" +
                 $"<color={healthColorStr}>{m_hitPoints}</color>/{HitPointsMax} HP";
 
             if ( m_isDefending ) stats += " (defending)";

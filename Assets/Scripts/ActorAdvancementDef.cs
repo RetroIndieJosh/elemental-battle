@@ -22,6 +22,7 @@ public class ActorAdvancementDef : ScriptableObject
             hitPointsMax = GetHitPointsForLevel( a_level ),
             speed = GetSpeedForLevel( a_level )
         };
+        stats.level = a_level;
 
         return stats;
     }
