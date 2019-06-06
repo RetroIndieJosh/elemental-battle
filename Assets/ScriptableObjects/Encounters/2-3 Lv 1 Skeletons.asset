@@ -10,9 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b9871045962cfd74f9fcc848c612655d, type: 3}
-  m_Name: Two Skeletons (Easy)
+  m_Name: 2-3 Lv 1 Skeletons
   m_EditorClassIdentifier: Assembly-CSharp::Encounter
   m_enemyEntryList:
   - m_enemyDef: {fileID: 11400000, guid: 9b13a5059d697014398a11714694335a, type: 2}
-    m_level: 1
-    m_count: 2
+    m_levelCount:
+    - levelMin: 1
+      levelMax: 1
+      countMin: 1
+      countMax: 5

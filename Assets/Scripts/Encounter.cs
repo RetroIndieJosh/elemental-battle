@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EditorGUITable;
 
 [CreateAssetMenu(fileName = "New Encounter", menuName = "Encounter", order = 1)]
 public class Encounter: ScriptableObject

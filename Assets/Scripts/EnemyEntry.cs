@@ -1,22 +1,36 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EditorGUITable;
+
+[System.Serializable]
+public class LevelCount
+{
+    public int levelMin = 1;
+    public int levelMax = 1;
+
+    public int countMin = 1;
+    public int countMax = 1;
+} 
 
 [System.Serializable]
 public class EnemyEntry
 {
     [SerializeField] private ActorDef m_enemyDef = null;
-    [SerializeField] private int m_level = 1;
-    [SerializeField] private int m_count = 1;
+    [SerializeField] List<LevelCount> m_levelCount = new List<LevelCount>();
 
     public List<Actor> EnemyList {
         get {
             var enemyList = new List<Actor>();
-            for ( var i = 0; i < m_count; ++i ) {
-                var obj = new GameObject();
-                var actor = obj.AddComponent<Actor>();
-                actor.Set( m_enemyDef, m_level );
-                enemyList.Add( actor );
+            foreach ( var levelCount in m_levelCount ) {
+                var count = Random.Range( levelCount.countMin, levelCount.countMax );
+                for ( var i = 0; i < count; ++i ) {
+                    var obj = new GameObject();
+                    var actor = obj.AddComponent<Actor>();
+                    var level = Random.Range( levelCount.levelMin, levelCount.levelMax );
+                    actor.Set( m_enemyDef, level );
+                    enemyList.Add( actor );
+                }
             }
             return enemyList;
         }
