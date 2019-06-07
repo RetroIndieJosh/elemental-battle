@@ -575,6 +575,8 @@ public class BattleManager : MonoBehaviour, BattleControls.IMenusActions
 
     // TODO set player back to white color when revived
     private void RemoveDeadEnemies() {
+        UpdateEnemyHealthBars();
+
         foreach ( var player in m_playerList )
             if ( player.IsDead ) player.ActorSprite.Color = Color.gray;
         foreach ( var enemy in m_enemyList )
@@ -724,9 +726,9 @@ public class BattleManager : MonoBehaviour, BattleControls.IMenusActions
             var healthBar = enemy.ActorSprite.GetComponentInChildren<FillBarUI>();
             if ( healthBar == null ) continue;
             healthBar.FillPercent = (float)enemy.HitPoints / enemy.HitPointsMax;
-            if ( healthBar.FillPercent < 0.2 )
+            if ( healthBar.FillPercent < 0.3 )
                 healthBar.FillColor = Color.red;
-            else if ( healthBar.FillPercent < 0.4 )
+            else if ( healthBar.FillPercent < 0.5 )
                 healthBar.FillColor = Color.yellow;
             else
                 healthBar.FillColor = Color.green;
@@ -746,12 +748,15 @@ public class BattleManager : MonoBehaviour, BattleControls.IMenusActions
     }
 
     private void Update() {
+        UpdateHud();
+
         if ( m_activeActorDisplay.sprite == null ) m_activeActorDisplay.color = Color.clear;
         else m_activeActorDisplay.color = Color.white;
 
         if ( m_isRunning == false ) return;
 
         if ( m_enemyList.Count == 0 ) {
+            if ( m_activeActor.ActorSprite.IsAnimating ) return;
             PlaySound( m_victorySound );
             m_win.SetActive( true );
             m_isRunning = false;
@@ -785,8 +790,6 @@ public class BattleManager : MonoBehaviour, BattleControls.IMenusActions
         m_playerChargePoints = Mathf.Clamp( m_playerChargePoints, 0, m_chargePointsMax );
         m_chargePointsBar.FillPercent = (float)m_playerChargePoints / m_chargePointsMax;
         m_chargePointsLabel.text = $"{m_playerChargePoints}/{m_chargePointsMax} CP";
-
-        UpdateHud();
 
         m_timeSinceTurnStart += Time.deltaTime;
 
