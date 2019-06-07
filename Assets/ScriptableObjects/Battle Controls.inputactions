@@ -2,7 +2,7 @@
     "name": "Battle Controls",
     "maps": [
         {
-            "name": "Top Menu",
+            "name": "Menus",
             "id": "4ef48dd8-9003-4238-92ba-04613c49ae24",
             "actions": [
                 {
@@ -52,6 +52,17 @@
                 {
                     "name": "Back",
                     "id": "b9a126ee-72d9-4add-8751-5a6aa20561aa",
+                    "expectedControlLayout": "",
+                    "continuous": false,
+                    "passThrough": false,
+                    "initialStateCheck": false,
+                    "processors": "",
+                    "interactions": "",
+                    "bindings": []
+                },
+                {
+                    "name": "Help",
+                    "id": "4eda6b46-315a-4f28-93e2-133b3007aa00",
                     "expectedControlLayout": "",
                     "continuous": false,
                     "passThrough": false,
@@ -149,7 +160,7 @@
                 {
                     "name": "",
                     "id": "8701d14c-2568-444d-b71c-7859a873fabc",
-                    "path": "<Keyboard>/f1",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -178,6 +189,30 @@
                     "processors": "",
                     "groups": "",
                     "action": "Menu 4",
+                    "isComposite": false,
+                    "isPartOfComposite": false,
+                    "modifiers": ""
+                },
+                {
+                    "name": "",
+                    "id": "f794bb11-9c8e-47d8-a5b9-0f144f628647",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Help",
+                    "isComposite": false,
+                    "isPartOfComposite": false,
+                    "modifiers": ""
+                },
+                {
+                    "name": "",
+                    "id": "4f9408d4-d3ff-41c9-aa3b-ca24db3ee2c8",
+                    "path": "<Keyboard>/f1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Help",
                     "isComposite": false,
                     "isPartOfComposite": false,
                     "modifiers": ""

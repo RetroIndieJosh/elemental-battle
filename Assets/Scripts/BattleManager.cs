@@ -10,7 +10,7 @@ using UnityEngine.UI;
 using System.Collections;
 
 [DisallowMultipleComponent]
-public class BattleManager : MonoBehaviour, BattleControls.ITopMenuActions
+public class BattleManager : MonoBehaviour, BattleControls.IMenusActions
 {
     private class TurnData
     {
@@ -24,6 +24,7 @@ public class BattleManager : MonoBehaviour, BattleControls.ITopMenuActions
 
     private enum PlayerMenuState
     {
+        None,
         TopMenu,
         SpellMenu
     }
@@ -123,7 +124,7 @@ public class BattleManager : MonoBehaviour, BattleControls.ITopMenuActions
 
     private Actor m_activeActor = null;
     private int m_airEarthSpectrum = 0;
-    private PlayerMenuState m_curPlayerMenuState = PlayerMenuState.TopMenu;
+    private PlayerMenuState m_curPlayerMenuState = PlayerMenuState.None;
     private int m_currentTurn = 0;
     private int m_enemyChargePoints = 0;
     private List<Actor> m_enemyList = new List<Actor>();
@@ -157,6 +158,8 @@ public class BattleManager : MonoBehaviour, BattleControls.ITopMenuActions
 
     private PlayerMenuState CurPlayerMenuState {
         set {
+            if ( m_curPlayerMenuState == value ) return;
+
             ClearMenu();
             m_curPlayerMenuState = value;
 
@@ -476,7 +479,7 @@ public class BattleManager : MonoBehaviour, BattleControls.ITopMenuActions
     }
 
     public void OnMenu1( InputAction.CallbackContext context ) {
-        Debug.Log( "Menu 1" );
+        Debug.Log( "[Input] Menu 1" );
         if ( m_playerList.Contains( m_activeActor ) == false ) return;
         if ( context.performed == false ) return;
 
@@ -494,7 +497,7 @@ public class BattleManager : MonoBehaviour, BattleControls.ITopMenuActions
     }
 
     public void OnMenu2( InputAction.CallbackContext context ) {
-        Debug.Log( "Menu 2" );
+        Debug.Log( "[Input] Menu 2" );
         if ( m_playerList.Contains( m_activeActor ) == false ) return;
         if ( context.performed == false ) return;
 
@@ -509,7 +512,7 @@ public class BattleManager : MonoBehaviour, BattleControls.ITopMenuActions
     }
 
     public void OnMenu3( InputAction.CallbackContext context ) {
-        Debug.Log( "Menu 3" );
+        Debug.Log( "[Input] Menu 3" );
         if ( m_playerList.Contains( m_activeActor ) == false ) return;
         if ( context.performed == false ) return;
 
@@ -527,7 +530,7 @@ public class BattleManager : MonoBehaviour, BattleControls.ITopMenuActions
     }
 
     public void OnMenu4( InputAction.CallbackContext context ) {
-        Debug.Log( "Menu 4" );
+        Debug.Log( "[Input] Menu 4" );
         if ( m_playerList.Contains( m_activeActor ) == false ) return;
         if ( context.performed == false ) return;
 
@@ -552,19 +555,22 @@ public class BattleManager : MonoBehaviour, BattleControls.ITopMenuActions
     }
 
     public void OnBack( InputAction.CallbackContext context ) {
-        Debug.Log( "Back" );
+        Debug.Log( "[Input] Back" );
         if ( context.performed == false ) return;
         if ( m_playerList.Contains( m_activeActor ) == false ) return;
 
-        if ( m_curPlayerMenuState == PlayerMenuState.TopMenu ) {
-            if ( context.performed )
-                m_help.SetActive( true );
+        CurPlayerMenuState = PlayerMenuState.TopMenu;
+    }
 
-            if ( context.canceled )
-                m_help.SetActive( false );
-        } else {
-            m_curPlayerMenuState = PlayerMenuState.TopMenu;
-        }
+    public void OnHelp( InputAction.CallbackContext context ) {
+        Debug.Log( "[Input] Help" );
+        if ( m_playerList.Contains( m_activeActor ) == false ) return;
+
+        if ( context.performed )
+            m_help.SetActive( true );
+
+        if ( context.canceled )
+            m_help.SetActive( false );
     }
 
     // TODO set player back to white color when revived
@@ -653,19 +659,18 @@ public class BattleManager : MonoBehaviour, BattleControls.ITopMenuActions
 
     private void ShowControlsSpellMenu() {
         m_menuHeaderTextMesh.text = $"{m_activeActor.name} Spells";
-        SpellControlEntry( 0, m_battleControls.TopMenu.Menu1 );
-        SpellControlEntry( 1, m_battleControls.TopMenu.Menu2 );
-        SpellControlEntry( 2, m_battleControls.TopMenu.Menu3 );
-        SpellControlEntry( 3, m_battleControls.TopMenu.Menu4 );
-        m_menuEntryTextMesh[4].text = ControlString( m_battleControls.TopMenu.Back, "Back" );
+        SpellControlEntry( 0, m_battleControls.Menus.Menu1 );
+        SpellControlEntry( 1, m_battleControls.Menus.Menu2 );
+        SpellControlEntry( 2, m_battleControls.Menus.Menu3 );
+        SpellControlEntry( 3, m_battleControls.Menus.Menu4 );
+        m_menuEntryTextMesh[4].text = ControlString( m_battleControls.Menus.Back, "Back" );
     }
 
     private void ShowControlsTopMenu() {
-        m_menuEntryTextMesh[0].text = ControlString( m_battleControls.TopMenu.Menu1, "Attack" );
-        m_menuEntryTextMesh[1].text = ControlString( m_battleControls.TopMenu.Menu2, "Defend" );
-        m_menuEntryTextMesh[2].text = ControlString( m_battleControls.TopMenu.Menu3, "Spells" );
-        m_menuEntryTextMesh[3].text = ControlString( m_battleControls.TopMenu.Menu4, "Items (TODO)" );
-        m_menuEntryTextMesh[4].text = ControlString( m_battleControls.TopMenu.Back, "Help" );
+        m_menuEntryTextMesh[0].text = ControlString( m_battleControls.Menus.Menu1, "Attack" );
+        m_menuEntryTextMesh[1].text = ControlString( m_battleControls.Menus.Menu2, "Defend" );
+        m_menuEntryTextMesh[2].text = ControlString( m_battleControls.Menus.Menu3, "Spells" );
+        m_menuEntryTextMesh[3].text = ControlString( m_battleControls.Menus.Menu4, "Items (TODO)" );
 
         m_menuHeaderTextMesh.text = $"{m_activeActor.name}";
     }
@@ -698,8 +703,8 @@ public class BattleManager : MonoBehaviour, BattleControls.ITopMenuActions
 
     private void Start() {
         m_battleControls = new BattleControls();
-        m_battleControls.TopMenu.SetCallbacks( this );
-        m_battleControls.TopMenu.Enable();
+        m_battleControls.Menus.SetCallbacks( this );
+        m_battleControls.Menus.Enable();
 
         m_win.SetActive( false );
         m_gameOver.SetActive( false );

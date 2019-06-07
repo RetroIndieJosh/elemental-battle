@@ -16,7 +16,7 @@ public class BattleControls : IInputActionCollection
     ""name"": ""Battle Controls"",
     ""maps"": [
         {
-            ""name"": ""Top Menu"",
+            ""name"": ""Menus"",
             ""id"": ""4ef48dd8-9003-4238-92ba-04613c49ae24"",
             ""actions"": [
                 {
@@ -66,6 +66,17 @@ public class BattleControls : IInputActionCollection
                 {
                     ""name"": ""Back"",
                     ""id"": ""b9a126ee-72d9-4add-8751-5a6aa20561aa"",
+                    ""expectedControlLayout"": """",
+                    ""continuous"": false,
+                    ""passThrough"": false,
+                    ""initialStateCheck"": false,
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""bindings"": []
+                },
+                {
+                    ""name"": ""Help"",
+                    ""id"": ""4eda6b46-315a-4f28-93e2-133b3007aa00"",
                     ""expectedControlLayout"": """",
                     ""continuous"": false,
                     ""passThrough"": false,
@@ -163,7 +174,7 @@ public class BattleControls : IInputActionCollection
                 {
                     ""name"": """",
                     ""id"": ""8701d14c-2568-444d-b71c-7859a873fabc"",
-                    ""path"": ""<Keyboard>/f1"",
+                    ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -195,19 +206,44 @@ public class BattleControls : IInputActionCollection
                     ""isComposite"": false,
                     ""isPartOfComposite"": false,
                     ""modifiers"": """"
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f794bb11-9c8e-47d8-a5b9-0f144f628647"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Help"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false,
+                    ""modifiers"": """"
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4f9408d4-d3ff-41c9-aa3b-ca24db3ee2c8"",
+                    ""path"": ""<Keyboard>/f1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Help"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false,
+                    ""modifiers"": """"
                 }
             ]
         }
     ],
     ""controlSchemes"": []
 }");
-        // Top Menu
-        m_TopMenu = asset.GetActionMap("Top Menu");
-        m_TopMenu_Menu1 = m_TopMenu.GetAction("Menu 1");
-        m_TopMenu_Menu2 = m_TopMenu.GetAction("Menu 2");
-        m_TopMenu_Menu3 = m_TopMenu.GetAction("Menu 3");
-        m_TopMenu_Menu4 = m_TopMenu.GetAction("Menu 4");
-        m_TopMenu_Back = m_TopMenu.GetAction("Back");
+        // Menus
+        m_Menus = asset.GetActionMap("Menus");
+        m_Menus_Menu1 = m_Menus.GetAction("Menu 1");
+        m_Menus_Menu2 = m_Menus.GetAction("Menu 2");
+        m_Menus_Menu3 = m_Menus.GetAction("Menu 3");
+        m_Menus_Menu4 = m_Menus.GetAction("Menu 4");
+        m_Menus_Back = m_Menus.GetAction("Back");
+        m_Menus_Help = m_Menus.GetAction("Help");
     }
 
     ~BattleControls()
@@ -257,50 +293,55 @@ public class BattleControls : IInputActionCollection
         asset.Disable();
     }
 
-    // Top Menu
-    private InputActionMap m_TopMenu;
-    private ITopMenuActions m_TopMenuActionsCallbackInterface;
-    private InputAction m_TopMenu_Menu1;
-    private InputAction m_TopMenu_Menu2;
-    private InputAction m_TopMenu_Menu3;
-    private InputAction m_TopMenu_Menu4;
-    private InputAction m_TopMenu_Back;
-    public struct TopMenuActions
+    // Menus
+    private InputActionMap m_Menus;
+    private IMenusActions m_MenusActionsCallbackInterface;
+    private InputAction m_Menus_Menu1;
+    private InputAction m_Menus_Menu2;
+    private InputAction m_Menus_Menu3;
+    private InputAction m_Menus_Menu4;
+    private InputAction m_Menus_Back;
+    private InputAction m_Menus_Help;
+    public struct MenusActions
     {
         private BattleControls m_Wrapper;
-        public TopMenuActions(BattleControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Menu1 { get { return m_Wrapper.m_TopMenu_Menu1; } }
-        public InputAction @Menu2 { get { return m_Wrapper.m_TopMenu_Menu2; } }
-        public InputAction @Menu3 { get { return m_Wrapper.m_TopMenu_Menu3; } }
-        public InputAction @Menu4 { get { return m_Wrapper.m_TopMenu_Menu4; } }
-        public InputAction @Back { get { return m_Wrapper.m_TopMenu_Back; } }
-        public InputActionMap Get() { return m_Wrapper.m_TopMenu; }
+        public MenusActions(BattleControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Menu1 { get { return m_Wrapper.m_Menus_Menu1; } }
+        public InputAction @Menu2 { get { return m_Wrapper.m_Menus_Menu2; } }
+        public InputAction @Menu3 { get { return m_Wrapper.m_Menus_Menu3; } }
+        public InputAction @Menu4 { get { return m_Wrapper.m_Menus_Menu4; } }
+        public InputAction @Back { get { return m_Wrapper.m_Menus_Back; } }
+        public InputAction @Help { get { return m_Wrapper.m_Menus_Help; } }
+        public InputActionMap Get() { return m_Wrapper.m_Menus; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled { get { return Get().enabled; } }
         public InputActionMap Clone() { return Get().Clone(); }
-        public static implicit operator InputActionMap(TopMenuActions set) { return set.Get(); }
-        public void SetCallbacks(ITopMenuActions instance)
+        public static implicit operator InputActionMap(MenusActions set) { return set.Get(); }
+        public void SetCallbacks(IMenusActions instance)
         {
-            if (m_Wrapper.m_TopMenuActionsCallbackInterface != null)
+            if (m_Wrapper.m_MenusActionsCallbackInterface != null)
             {
-                Menu1.started -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnMenu1;
-                Menu1.performed -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnMenu1;
-                Menu1.canceled -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnMenu1;
-                Menu2.started -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnMenu2;
-                Menu2.performed -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnMenu2;
-                Menu2.canceled -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnMenu2;
-                Menu3.started -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnMenu3;
-                Menu3.performed -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnMenu3;
-                Menu3.canceled -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnMenu3;
-                Menu4.started -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnMenu4;
-                Menu4.performed -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnMenu4;
-                Menu4.canceled -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnMenu4;
-                Back.started -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnBack;
-                Back.performed -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnBack;
-                Back.canceled -= m_Wrapper.m_TopMenuActionsCallbackInterface.OnBack;
+                Menu1.started -= m_Wrapper.m_MenusActionsCallbackInterface.OnMenu1;
+                Menu1.performed -= m_Wrapper.m_MenusActionsCallbackInterface.OnMenu1;
+                Menu1.canceled -= m_Wrapper.m_MenusActionsCallbackInterface.OnMenu1;
+                Menu2.started -= m_Wrapper.m_MenusActionsCallbackInterface.OnMenu2;
+                Menu2.performed -= m_Wrapper.m_MenusActionsCallbackInterface.OnMenu2;
+                Menu2.canceled -= m_Wrapper.m_MenusActionsCallbackInterface.OnMenu2;
+                Menu3.started -= m_Wrapper.m_MenusActionsCallbackInterface.OnMenu3;
+                Menu3.performed -= m_Wrapper.m_MenusActionsCallbackInterface.OnMenu3;
+                Menu3.canceled -= m_Wrapper.m_MenusActionsCallbackInterface.OnMenu3;
+                Menu4.started -= m_Wrapper.m_MenusActionsCallbackInterface.OnMenu4;
+                Menu4.performed -= m_Wrapper.m_MenusActionsCallbackInterface.OnMenu4;
+                Menu4.canceled -= m_Wrapper.m_MenusActionsCallbackInterface.OnMenu4;
+                Back.started -= m_Wrapper.m_MenusActionsCallbackInterface.OnBack;
+                Back.performed -= m_Wrapper.m_MenusActionsCallbackInterface.OnBack;
+                Back.canceled -= m_Wrapper.m_MenusActionsCallbackInterface.OnBack;
+                Help.started -= m_Wrapper.m_MenusActionsCallbackInterface.OnHelp;
+                Help.performed -= m_Wrapper.m_MenusActionsCallbackInterface.OnHelp;
+                Help.canceled -= m_Wrapper.m_MenusActionsCallbackInterface.OnHelp;
             }
-            m_Wrapper.m_TopMenuActionsCallbackInterface = instance;
+            m_Wrapper.m_MenusActionsCallbackInterface = instance;
             if (instance != null)
             {
                 Menu1.started += instance.OnMenu1;
@@ -318,22 +359,26 @@ public class BattleControls : IInputActionCollection
                 Back.started += instance.OnBack;
                 Back.performed += instance.OnBack;
                 Back.canceled += instance.OnBack;
+                Help.started += instance.OnHelp;
+                Help.performed += instance.OnHelp;
+                Help.canceled += instance.OnHelp;
             }
         }
     }
-    public TopMenuActions @TopMenu
+    public MenusActions @Menus
     {
         get
         {
-            return new TopMenuActions(this);
+            return new MenusActions(this);
         }
     }
-    public interface ITopMenuActions
+    public interface IMenusActions
     {
         void OnMenu1(InputAction.CallbackContext context);
         void OnMenu2(InputAction.CallbackContext context);
         void OnMenu3(InputAction.CallbackContext context);
         void OnMenu4(InputAction.CallbackContext context);
         void OnBack(InputAction.CallbackContext context);
+        void OnHelp(InputAction.CallbackContext context);
     }
 }
