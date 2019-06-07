@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c8c68db1565f15d458eb7624776007c3, type: 3}
-  m_Name: Skeleton (sword)
+  m_Name: Zombie (male)
   m_EditorClassIdentifier: 
-  m_fieldSprite: {fileID: -6680533195079116747, guid: 4d1544d03721a5943b26a6682f775533,
+  m_fieldSprite: {fileID: 3839611741517165852, guid: 4d1544d03721a5943b26a6682f775533,
     type: 3}
-  m_portraitSprite: {fileID: 21300000, guid: b0403dea59ce9f843a49caec66dbb80e, type: 3}
+  m_portraitSprite: {fileID: 3839611741517165852, guid: 4d1544d03721a5943b26a6682f775533,
+    type: 3}
   m_advancementDef: {fileID: 11400000, guid: 5ef43893589c3104aadd6401b30ad293, type: 2}
   m_levelCap: 100
   m_element: 4

@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: 1 First Battle
   m_EditorClassIdentifier: Assembly-CSharp::EncounterRegion
   m_enemyPartyList:
-  - {fileID: 11400000, guid: d0d888f6f5a3f5b4dba874460680d4bf, type: 2}
+  - encounterList:
+    - {fileID: 11400000, guid: 3d68d7bcdcbf1494dbaebc5ca00ab1a3, type: 2}

@@ -930,7 +930,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_actorDef: {fileID: 11400000, guid: 645ef6bec6af9344ca1ea08080f4ee18, type: 2}
-  m_startLevel: 3
+  m_startLevel: 1
   ActorSprite: {fileID: 0}
 --- !u!1 &663009917
 GameObject:
@@ -2105,7 +2105,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_actorDef: {fileID: 11400000, guid: c5e746b26ab338f4191ab90045d37120, type: 2}
-  m_startLevel: 6
+  m_startLevel: 3
   ActorSprite: {fileID: 0}
 --- !u!4 &1130031030
 Transform:
@@ -3684,7 +3684,7 @@ MonoBehaviour:
     encounterRegion: {fileID: 11400000, guid: 139f30a90c5a00f4d88a605a14966f1e, type: 2}
   - name: 
     openMessage: <color=red>Jack</color> brings the fire
-    encounterRegion: {fileID: 0}
+    encounterRegion: {fileID: 11400000, guid: 0bf97e1620de44f45ad628d3a869f0eb, type: 2}
   - name: 
     openMessage: A gust brings <color=yellow>Karen</color> into the fray
     encounterRegion: {fileID: 0}
@@ -3693,10 +3693,10 @@ MonoBehaviour:
     encounterRegion: {fileID: 0}
   - name: 
     openMessage: Will is the final hero
-    encounterRegion: {fileID: 0}
+    encounterRegion: {fileID: 11400000, guid: 230251606bd6e6441a473f0925e92167, type: 2}
   - name: 
     openMessage: Now you're on your own...
-    encounterRegion: {fileID: 0}
+    encounterRegion: {fileID: 11400000, guid: 364169f7c87db6542b1de82e9e3a1cf3, type: 2}
   m_arenaPlayerList:
   - firstLevel: 0
     player: {fileID: 1798394196}
@@ -3849,7 +3849,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_actorDef: {fileID: 11400000, guid: 2b2300746c98fef43b1b726bbb6f0a2e, type: 2}
-  m_startLevel: 5
+  m_startLevel: 2
   ActorSprite: {fileID: 0}
 --- !u!4 &1878036266
 Transform:
@@ -4050,7 +4050,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_actorDef: {fileID: 11400000, guid: b396c23cf860dea4aad4f1ae0d370526, type: 2}
-  m_startLevel: 4
+  m_startLevel: 2
   ActorSprite: {fileID: 0}
 --- !u!4 &1902136270
 Transform:

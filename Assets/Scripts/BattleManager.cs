@@ -480,6 +480,7 @@ public class BattleManager : MonoBehaviour, BattleControls.IMenusActions
 
     public void OnMenu1( InputAction.CallbackContext context ) {
         Debug.Log( "[Input] Menu 1" );
+        if ( m_activeActor.ActorSprite.IsAnimating ) return;
         if ( m_playerList.Contains( m_activeActor ) == false ) return;
         if ( context.performed == false ) return;
 
@@ -498,6 +499,7 @@ public class BattleManager : MonoBehaviour, BattleControls.IMenusActions
 
     public void OnMenu2( InputAction.CallbackContext context ) {
         Debug.Log( "[Input] Menu 2" );
+        if ( m_activeActor.ActorSprite.IsAnimating ) return;
         if ( m_playerList.Contains( m_activeActor ) == false ) return;
         if ( context.performed == false ) return;
 
@@ -513,6 +515,7 @@ public class BattleManager : MonoBehaviour, BattleControls.IMenusActions
 
     public void OnMenu3( InputAction.CallbackContext context ) {
         Debug.Log( "[Input] Menu 3" );
+        if ( m_activeActor.ActorSprite.IsAnimating ) return;
         if ( m_playerList.Contains( m_activeActor ) == false ) return;
         if ( context.performed == false ) return;
 
@@ -531,6 +534,7 @@ public class BattleManager : MonoBehaviour, BattleControls.IMenusActions
 
     public void OnMenu4( InputAction.CallbackContext context ) {
         Debug.Log( "[Input] Menu 4" );
+        if ( m_activeActor.ActorSprite.IsAnimating ) return;
         if ( m_playerList.Contains( m_activeActor ) == false ) return;
         if ( context.performed == false ) return;
 
@@ -555,6 +559,7 @@ public class BattleManager : MonoBehaviour, BattleControls.IMenusActions
     }
 
     public void OnBack( InputAction.CallbackContext context ) {
+        if ( m_activeActor.ActorSprite.IsAnimating ) return;
         Debug.Log( "[Input] Back" );
         if ( context.performed == false ) return;
         if ( m_playerList.Contains( m_activeActor ) == false ) return;
