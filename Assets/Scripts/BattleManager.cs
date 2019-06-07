@@ -164,6 +164,19 @@ public class BattleManager : MonoBehaviour, BattleControls.ITopMenuActions
                 case PlayerMenuState.SpellMenu: ShowControlsSpellMenu(); break;
                 case PlayerMenuState.TopMenu: ShowControlsTopMenu(); break;
             }
+
+            if ( Gamepad.current == null ) return;
+
+            if ( string.IsNullOrEmpty( m_menuEntryTextMesh[0].text ) == false )
+                m_menuEntryImage[0].sprite = UiManager.instance.GetSpriteFor( Gamepad.current.aButton );
+            if ( string.IsNullOrEmpty( m_menuEntryTextMesh[1].text ) == false )
+                m_menuEntryImage[1].sprite = UiManager.instance.GetSpriteFor( Gamepad.current.bButton );
+            if ( string.IsNullOrEmpty( m_menuEntryTextMesh[2].text ) == false )
+                m_menuEntryImage[2].sprite = UiManager.instance.GetSpriteFor( Gamepad.current.xButton );
+            if ( string.IsNullOrEmpty( m_menuEntryTextMesh[3].text ) == false )
+                m_menuEntryImage[3].sprite = UiManager.instance.GetSpriteFor( Gamepad.current.yButton );
+            if ( string.IsNullOrEmpty( m_menuEntryTextMesh[4].text ) == false )
+                m_menuEntryImage[4].sprite = UiManager.instance.GetSpriteFor( Gamepad.current.leftShoulder );
         }
     }
 
@@ -623,14 +636,8 @@ public class BattleManager : MonoBehaviour, BattleControls.ITopMenuActions
 
         var str = "";
         foreach( var binding in a_control.bindings ) {
+            if ( binding.path.Contains( "Gamepad" ) ) continue;
             var control = binding.path.Substring( binding.path.LastIndexOf( '/' ) + 1 );
-            switch( control ) {
-                case "buttonEast": control = "(X)"; break;
-                case "buttonNorth": control = "(Y)"; break;
-                case "buttonSouth": control = "(A)"; break;
-                case "buttonWest": control = "(B)"; break;
-                case "leftShoulder": control = "[LB]"; break;
-            }
             str += $"{control} ";
         }
         return str + a_desc;

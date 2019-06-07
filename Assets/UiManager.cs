@@ -23,7 +23,7 @@ public class UiManager : MonoBehaviour
         else if ( a_button.displayName == "B" ) return m_buttonImageB;
         else if ( a_button.displayName == "X" ) return m_buttonImageX;
         else if ( a_button.displayName == "Y" ) return m_buttonImageY;
-        else if ( a_button.displayName == "LB" ) return m_buttonImageLB;
+        else if ( a_button.displayName == "Left Shoulder" ) return m_buttonImageLB;
         return null;
     }
 
