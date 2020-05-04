@@ -11,6 +11,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 
+(c)2019 Joshua McLean
+
+--------------
+
 Encounters are really enemy GROUPS
 
 An EncounterRegion has a collection of potential Encounters (not to be confused with the class named Encounter)
